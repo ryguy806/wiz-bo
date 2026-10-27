@@ -1,5 +1,5 @@
 import './App.css'
-import CardItem from './components/CardItem'
+import CardFrontItem from './components/CardFrontItem'
 import { createDeck } from "./helpers/gameStateHelper"
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
     <div className="flex gap-2">
       { deck.map((card) => (
         <div key={card.id}>
-          <CardItem value={card.value} id={card.id} />
+          <CardFrontItem value={card.value} id={card.id} />
         </div>
       )) }
     </div>

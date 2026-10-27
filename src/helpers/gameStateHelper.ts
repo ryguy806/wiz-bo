@@ -5,7 +5,7 @@ export const createDeck = (): Card[] => {
     let idCounter = 0
 
     // Adds in cards 1-12, 12 times
-    for (let i = 0; i <= 12; i++) {
+    for (let i = 1; i <= 12; i++) {
         for (let j = 0; j < 12; j++) {
             deck.push({id: `card-${idCounter++}`, value: i})
         }
@@ -39,20 +39,20 @@ export const getTextColor = (number: number): string => {
         case 1:
         case 2:
         case 3:
-            return "red"
+            return "text-red-500"
         case 4:
         case 5:
         case 6:
-            return "blue"
+            return "text-blue-500"
         case 7:
         case 8:
         case 9:
-            return "purple"
+            return "text-purple-500"
         case 10:
         case 11:
         case 12:
-            return "green"
+            return "text-green-500"
         default:
-            return "black"
+            return "text-black"
     }
 }
