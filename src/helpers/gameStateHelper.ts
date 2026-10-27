@@ -19,3 +19,17 @@ export const createDeck = (): Card[] => {
     // retruns the shuffled deck
     return deck.sort(() => Math.random() - 0.5)
 }
+
+// Checks if a card can be played legally on a pile.
+const validatePlay = (card: Card, target: Card[]): boolean => {
+    // "Wiz-Bo" cards are always accepted
+    if (card.value === "WIZ-BO") return true
+
+    // Playing on an empty pile
+    if (target.length === 0) return card.value === 1
+
+    const topCard = target[target.length - 1]
+    const expectedValue = topCard.value === "WIZ-BO" ? target.length + 1 : (topCard.value as number) + 1
+
+    return card.value === expectedValue
+}
