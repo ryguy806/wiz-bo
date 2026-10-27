@@ -8,7 +8,7 @@ type HandProps = {
 
 const Hand = ({faceUp, cards}: HandProps) => {
   return (
-    <div hidden={!faceUp} className="flex flex-row">
+    <div className="flex flex-row">
         {
             cards.map((card) => (
                 <CardItem card={card} key={card.id} faceUp={faceUp} />
