@@ -12,3 +12,12 @@ export interface Player {
     hand: Card[]
     discardPiles: Card[][]
 }
+
+export interface GameState {
+    players: Player[]
+    currentPlayer: number
+    drawPile: Card[]
+    buildingPiles: Card[][]
+    gameStarted: boolean
+    winner: string | null
+}
