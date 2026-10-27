@@ -1,7 +1,7 @@
 import type { Card } from "../../helpers/types"
 import wizardCardBack from "../../assets/images/wizard-card-back.jpg"
 
-const CardFrontItem = ({id, value}: Card) => {
+const CardFrontItem = ({id}: Card) => {
 
     return (
         <div id={id} className="border border-black w-10 h-20 flex items-center justify-center">
