@@ -1,12 +1,18 @@
-import magicBubble from "./assets/images/magic-bubble.png"
 import './App.css'
-import Card from './components/Card'
+import CardItem from './components/CardItem'
+import { createDeck } from "./helpers/gameStateHelper"
 
 function App() {
 
+  const deck = createDeck()
+
   return (
     <div className="flex gap-2">
-      <Card value={9} faceDown={false}/>
+      { deck.map((card) => (
+        <div key={card.id}>
+          <CardItem value={card.value} id={card.id} />
+        </div>
+      )) }
     </div>
   )
 }

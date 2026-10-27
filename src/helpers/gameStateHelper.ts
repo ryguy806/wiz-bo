@@ -33,3 +33,26 @@ export const validatePlay = (card: Card, target: Card[]): boolean => {
 
     return card.value === expectedValue
 }
+
+export const getTextColor = (number: number): string => {
+    switch (number) {
+        case 1:
+        case 2:
+        case 3:
+            return "red"
+        case 4:
+        case 5:
+        case 6:
+            return "blue"
+        case 7:
+        case 8:
+        case 9:
+            return "purple"
+        case 10:
+        case 11:
+        case 12:
+            return "green"
+        default:
+            return "black"
+    }
+}
