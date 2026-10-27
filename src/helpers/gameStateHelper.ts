@@ -21,7 +21,7 @@ export const createDeck = (): Card[] => {
 }
 
 // Checks if a card can be played legally on a pile.
-const validatePlay = (card: Card, target: Card[]): boolean => {
+export const validatePlay = (card: Card, target: Card[]): boolean => {
     // "Wiz-Bo" cards are always accepted
     if (card.value === "WIZ-BO") return true
 
