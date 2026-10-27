@@ -5,7 +5,7 @@ import { getTextColor } from "../../helpers/gameStateHelper"
 const CardFrontItem = ({id, value}: Card) => {
 
     return (
-        <div id={id} className="border border-black bg-white size-full flex text-2xl items-center justify-center">
+        <div id={id} className="border border-black bg-white h-64 w-48 flex text-6xl items-center justify-center">
             <div className={`isolate ${getTextColor(parseInt(value.toString()))} size-full flex justify-center items-center`}>
                 {!(value === 'WIZ-BO') ? value : (
                     <span className="motion-safe:animate-spin">
