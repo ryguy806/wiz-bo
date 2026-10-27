@@ -1,6 +1,7 @@
 export type CardValue = number | "WIZ-BO"
 
-export type CardType = {
+export interface CardType {
     id: string
     value: CardValue
 }
+
