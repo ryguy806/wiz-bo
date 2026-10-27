@@ -6,7 +6,7 @@ function App() {
 
   return (
     <div className="flex gap-2">
-      <Card value={magicBubble} faceDown={false}/>
+      <Card value={9} faceDown={false}/>
     </div>
   )
 }
