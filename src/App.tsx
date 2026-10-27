@@ -1,5 +1,5 @@
 import './App.css'
-import CardFrontItem from './components/Card/CardFrontItem'
+import Hand from './components/Hand/Hand'
 import { createDeck } from "./helpers/gameStateHelper"
 
 function App() {
@@ -8,11 +8,7 @@ function App() {
 
   return (
     <div className="flex flex-row gap-10">
-      { deck.map((card) => (
-        <div key={card.id} className="size-full">
-          <CardFrontItem value={card.value} id={card.id} />
-        </div>
-      )) }
+      <Hand faceUp={true} cards={deck.splice(0, 5)} />
     </div>
   )
 }
