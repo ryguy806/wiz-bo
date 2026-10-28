@@ -9,14 +9,19 @@ type CardItemProps = {
 
 const CardItem = ({card, faceUp}: CardItemProps) => {
     return (
-        <div id={card.id} className="group h-64 w-48">
+        <div id={card.id} className="group h-32 w-24">
             <div className="relative size-full">
-                <div className="absolute inset-0 size-full" hidden={faceUp}>
-                    <CardBackItem id={card.id} value={card.value}/>
-                </div>
-                <div className="absolute inset-0 size-full" hidden={!faceUp}>
-                    <CardFrontItem id={card.id} value={card.value} />
-                </div>
+                {
+                    !faceUp ? (
+                        <div className="absolute inset-0 size-full">
+                            <CardBackItem id={card.id} value={card.value}/>
+                        </div>
+                    ) : (
+                        <div className="absolute inset-0 size-full">
+                            <CardFrontItem id={card.id} value={card.value} />
+                        </div>  
+                    )
+                } 
             </div>
         </div>
     )
