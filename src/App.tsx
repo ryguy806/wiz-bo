@@ -30,7 +30,23 @@ function App() {
           <Hand faceUp={true} cards={deck.splice(0, 5)} />
         </div>
       </div>
-      <div className="flex self-center absolute top-50 bottom-50 left-100">
+      <div id="building-piles" className='flex absolute top-50 bottom-50 left-100'>
+        <div className='relative'>
+          <div className='absolute right-20 left-20 w-24 h-32 border border-dashed'>
+            #1
+          </div>
+          <div className='absolute left-60 top-44 w-24 h-32 border border-dashed'>
+            #2
+          </div>
+          <div className='absolute right-20 left-20 bottom-10 w-24 h-32 border border-dashed'>
+            #3
+          </div>
+          <div className='absolute -right-5 top-44 w-24 h-32 border border-dashed'>
+            #4
+          </div>
+        </div>
+      </div>
+      <div id="deck" className="flex self-center absolute top-45 bottom-45 left-100">
         <Deck name="Draw Pile" deck={deck} />
       </div>
     </div>
