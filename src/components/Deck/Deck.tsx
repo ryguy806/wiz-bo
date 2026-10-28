@@ -11,7 +11,7 @@ const Deck = ({name, deck}: DeckProps) => {
     <div id={name} className="relative flex justify-center items-center">
         {
             deck.map((card, i) => (
-                <div key={i} className="absolute top-0 left-0">
+                <div key={i} className="absolute -top-20 left-20">
                     <CardItem faceUp={false} card={card} />
                 </div>
             ))

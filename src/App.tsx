@@ -8,7 +8,7 @@ function App() {
   const deck = createDeck()
 
   return (
-    <div className='relative h-screen w-screen'>
+    <div className='relative h-screen w-screen overflow-hidden'>
       <div id="hands" className="size-full">
         {/* Opponents Hands */}
         <div id="opponent-1" className="flex flex-row gap-10 absolute -left-30 bottom-100">
@@ -19,7 +19,7 @@ function App() {
         <div id="opponent-2" className="flex flex-row gap-10 absolute top-10 left-70">
           <Hand faceUp={false} cards={deck.splice(0, 5)} />
         </div>
-        <div id="opponent-3" className="flex flex-row gap-10 absolute -right-10 bottom-100">
+        <div id="opponent-3" className="flex flex-row gap-10 absolute right-140 bottom-100">
           <div className='-rotate-90'>
             <Hand faceUp={false} cards={deck.splice(0, 5)} />
           </div>
