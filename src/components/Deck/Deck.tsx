@@ -5,24 +5,40 @@ type DeckProps = {
     name: string
     deck: Card[]
     faceUp: boolean
+    selected?: boolean
+    onClick?: () => void
+    // Highlights the pile as a valid place to click while a card is selected
+    highlight?: boolean
 }
 
-const Deck = ({name, deck, faceUp}: DeckProps) => {
+// Shows a pile as its top card plus a count badge, or an empty slot with the pile's name
+const Deck = ({name, deck, faceUp, selected = false, onClick, highlight = false}: DeckProps) => {
+  const interactive = onClick !== undefined
+  const topCard = deck[deck.length - 1]
+
   return (
-    <div id={name} className="relative flex justify-center items-center">
+    <div id={name} className="relative h-32 w-24">
         {
-            deck.length === 0 ? (<></>) : (
-                <>
-                    {
-                        deck.map((card, i) => (
-                            <div key={i} className="absolute -top-20 left-20">
-                                <CardItem faceUp={faceUp} card={card} />
-                            </div>
-                        ))
-                    }
-                </>
+            !topCard ? (
+                <div
+                    onClick={onClick}
+                    className={`flex size-full items-center justify-center rounded border-2 border-dashed p-1 text-center text-sm
+                        ${highlight ? "border-yellow-400 bg-yellow-400/20 text-yellow-300" : "border-white/40 text-white/60"}
+                        ${interactive ? "cursor-pointer" : ""}`}
+                >
+                    {name}
+                </div>
+            ) : (
+                <div className={`rounded ${highlight ? "ring-4 ring-yellow-400/70" : ""}`}>
+                    <CardItem card={topCard} faceUp={faceUp} selected={selected} onClick={onClick} />
+                </div>
             )
-        }        
+        }
+        {deck.length > 0 && (
+            <span className="pointer-events-none absolute -bottom-2 -right-2 rounded-full bg-black px-2 text-sm font-bold text-white">
+                {deck.length}
+            </span>
+        )}
     </div>
   )
 }

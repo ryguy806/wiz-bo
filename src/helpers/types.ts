@@ -18,6 +18,14 @@ export interface GameState {
     currentPlayer: number
     drawPile: Card[]
     buildingPiles: Card[][]
+    // Finished (1-12) building piles, reshuffled into the draw pile when it runs out
+    completedPile: Card[]
     gameStarted: boolean
     winner: string | null
 }
+
+// Where a card being played comes from. The top card of a pile is always the last element.
+export type CardSource =
+    | { from: "stock" }
+    | { from: "hand"; cardId: string }
+    | { from: "discard"; pile: number }
