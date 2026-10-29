@@ -1,5 +1,11 @@
 import type { Card } from "./types"
 
+export const HAND_SIZE = 5
+export const BUILDING_PILE_COUNT = 4
+export const DISCARD_PILE_COUNT = 4
+export const MIN_PLAYERS = 2
+export const MAX_PLAYERS = 6
+
 export const createDeck = (): Card[] => {
     const deck: Card[] = []
     let idCounter = 0
@@ -19,6 +25,8 @@ export const createDeck = (): Card[] => {
     // retruns the shuffled deck
     return deck.sort(() => Math.random() - 0.5)
 }
+
+export const getStockSize = (playerCount: number): number => (playerCount <= 4 ? 30 : 20)
 
 // Checks if a card can be played legally on a pile.
 export const validatePlay = (card: Card, target: Card[]): boolean => {

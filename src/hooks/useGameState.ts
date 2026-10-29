@@ -32,5 +32,26 @@ export const useGameState = () => {
         })
     }
 
-     return { gameState, startGame }
+    const startTurn = () => {
+    setGameState((prev) => {
+      const activePlayer = prev.players[prev.currentPlayer];
+      const neededCards = 5 - activePlayer.hand.length;
+      if (neededCards <= 0) return prev;
+
+      const newDrawPile = [...prev.drawPile];
+      const drawnCards = newDrawPile.splice(0, neededCards);
+      
+      return {
+        ...prev,
+        drawPile: newDrawPile,
+        players: prev.players.map((player, idx) => 
+          idx === prev.currentPlayer 
+            ? { ...player, hand: [...player.hand, ...drawnCards] } 
+            : player
+        ),
+      };
+    });
+  };
+
+     return { gameState, startGame, startTurn }
 }

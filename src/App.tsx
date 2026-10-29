@@ -3,7 +3,6 @@ import BuildingPiles from './components/Deck/BuildingPiles'
 import Deck from './components/Deck/Deck'
 import Hand from './components/Hand/Hand'
 import { createDeck } from "./helpers/gameStateHelper"
-import type { Card } from './helpers/types'
 
 function App() {
 
