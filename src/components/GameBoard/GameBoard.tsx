@@ -56,7 +56,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
     }
 
     return (
-        <div className="flex min-h-screen flex-col gap-6 bg-emerald-900 p-4 text-white">
+        <div className="flex min-h-screen flex-col gap-6 p-4 text-white">
             <header className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold">Wiz-Bo</h1>
                 <button

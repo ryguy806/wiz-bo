@@ -24,9 +24,9 @@ const SetupScreen = ({onStart}: SetupScreenProps) => {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-emerald-900 p-4">
-            <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-4 rounded-lg bg-white p-6 shadow-lg">
-                <h1 className="text-center text-4xl font-bold">Wiz-Bo</h1>
+        <div className="flex min-h-screen items-center justify-center bg-olive-700 p-4">
+            <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-4 rounded-lg text-black bg-taupe-300 p-6 shadow-lg">
+                <h1 className="text-center text-4xl font-bold"><span className="text-sky-900">Wiz-Bo</span></h1>
 
                 <label className="flex flex-col gap-1">
                     <span className="font-semibold">Number of players</span>
@@ -58,7 +58,7 @@ const SetupScreen = ({onStart}: SetupScreenProps) => {
 
                 <button
                     type="submit"
-                    className="rounded bg-emerald-700 py-2 font-semibold text-white hover:bg-emerald-600"
+                    className="rounded bg-rose-900 py-2 font-semibold text-white hover:bg-emerald-600"
                 >
                     Start game
                 </button>
