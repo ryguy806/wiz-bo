@@ -1,7 +1,9 @@
 import './App.css'
+import BuildingPiles from './components/Deck/BuildingPiles'
 import Deck from './components/Deck/Deck'
 import Hand from './components/Hand/Hand'
 import { createDeck } from "./helpers/gameStateHelper"
+import type { Card } from './helpers/types'
 
 function App() {
 
@@ -33,21 +35,21 @@ function App() {
       <div id="building-piles" className='flex absolute top-50 bottom-50 left-100'>
         <div className='relative'>
           <div className='absolute right-20 left-20 w-24 h-32 border border-dashed flex items-center justify-center'>
-            #1
+            <BuildingPiles name="#1" cards={[]}/>
           </div>
           <div className='absolute left-60 top-44 w-24 h-32 border border-dashed flex items-center justify-center '>
-            #2
+            <BuildingPiles name="#2" cards={[]}/>
           </div>
           <div className='absolute right-20 left-20 bottom-10 w-24 h-32 border border-dashed flex items-center justify-center'>
-            #3
+            <BuildingPiles name="#3" cards={[]}/>
           </div>
           <div className='absolute -right-5 top-44 w-24 h-32 border border-dashed flex items-center justify-center'>
-            #4
+            <BuildingPiles name="#4" cards={[]}/>
           </div>
         </div>
       </div>
       <div id="deck" className="flex self-center absolute top-45 bottom-45 left-100">
-        <Deck name="Draw Pile" deck={deck} />
+        <Deck name="Draw Pile" deck={deck} faceUp={false} />
       </div>
     </div>
   )
