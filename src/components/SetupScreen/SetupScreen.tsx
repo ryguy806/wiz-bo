@@ -60,7 +60,7 @@ const SetupScreen = ({onStart}: SetupScreenProps) => {
                     type="submit"
                     className="rounded bg-rose-900 py-2 font-semibold text-white hover:bg-emerald-600"
                 >
-                    Start game
+                    New Game
                 </button>
             </form>
         </div>
