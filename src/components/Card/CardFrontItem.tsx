@@ -1,8 +1,15 @@
 import magicBubble from "../../assets/images/magic-bubble.png"
 import type { Card } from "../../helpers/types"
 import { getTextColor } from "../../helpers/gameStateHelper"
+import { useState } from "react"
 
 const CardFrontItem = ({id, value}: Card) => {
+
+    const [icon, setIcon] = useState("🦉")
+
+    "🕯️"
+    "📖"
+    "🍄"
 
     return (
         <div id={id} className="border border-black bg-white h-32 w-24 flex text-6xl items-center justify-center">
