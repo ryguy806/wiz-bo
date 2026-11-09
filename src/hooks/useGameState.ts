@@ -11,20 +11,19 @@ import { getComputerMove } from "../helpers/computerPlayer"
 
 export const useGameState = () => {
     const [gameState, setGameState] = useState<GameState>(createInitialState)
-
     useEffect(() => {
-    if (!gameState.gameStarted || gameState.winner) return
-    if (!gameState.players[gameState.currentPlayer].isComputer) return
+        if (!gameState.gameStarted || gameState.winner) return
+        if (!gameState.players[gameState.currentPlayer].isComputer) return
 
-    const timer = setTimeout(() => {
-        const move = getComputerMove(gameState)
-        if (move.type === "play") playCard(move.source, move.buildingIndex)
-        else if (move.type === "discard") discardCard(move.cardId, move.discardIndex)
-        else passTurn()
-    }, 800)
+        const timer = setTimeout(() => {
+            const move = getComputerMove(gameState)
+            if (move.type === "play") playCard(move.source, move.buildingIndex)
+            else if (move.type === "discard") discardCard(move.cardId, move.discardIndex)
+            else passTurn()
+        }, 800)
 
-    return () => clearTimeout(timer)
-}, [gameState])
+        return () => clearTimeout(timer)
+    }, [gameState])
 
     const startGame = (playerNames: string[], computerCount = 0) => {
         setGameState(createNewGame(playerNames, computerCount))

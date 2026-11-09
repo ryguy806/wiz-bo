@@ -19,6 +19,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
     const [selected, setSelected] = useState<CardSource | null>(null)
 
     const active = players[currentPlayer]
+    const isComputerTurn = active.isComputer
     const opponents = players.filter((_, i) => i !== currentPlayer)
     const selectedCard: Card | undefined = selected ? getSourceCard(active, selected) : undefined
 
@@ -30,16 +31,19 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
     }
 
     // Clicking the already-selected card puts it back down
-    const toggleSelect = (source: CardSource) => setSelected(isSelected(source) ? null : source)
+    const toggleSelect = (source: CardSource) => {
+        if (isComputerTurn) return
+        setSelected(isSelected(source) ? null : source)
+    }
 
     const handleBuildingClick = (index: number) => {
-        if (!selected || winner) return
+        if (!selected || winner || isComputerTurn) return
         onPlayCard(selected, index)
         setSelected(null)
     }
 
     const handleDiscardClick = (index: number) => {
-        if (winner) return
+        if (winner || isComputerTurn) return
         if (selected?.from === "hand") {
             onDiscard(selected.cardId, index)
             setSelected(null)
@@ -99,8 +103,10 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
             </section>
 
             <section className="mt-auto flex flex-col items-center gap-4 rounded-lg bg-black/30 p-4">
-                <h2 className="text-xl font-semibold">{active.name}'s turn</h2>
-                <p className="text-sm text-white/80">{instruction}</p>
+                <h2 className="text-xl font-semibold">
+                    {active.name}'s turn{isComputerTurn && " (thinking...)"}
+                </h2>
+                {!isComputerTurn && <p className="text-sm text-white/80">{instruction}</p>}
 
                 <div className="flex flex-wrap items-start justify-center gap-6">
                     <div className="flex flex-col items-center gap-1">
@@ -130,13 +136,13 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
                 </div>
 
                 <Hand
-                    faceUp={true}
+                    faceUp={!isComputerTurn}
                     cards={active.hand}
                     selectedId={selected?.from === "hand" ? selected.cardId : null}
                     onSelect={(card) => toggleSelect({from: "hand", cardId: card.id})}
                 />
 
-                {canPassTurn(gameState) && (
+                {!isComputerTurn && canPassTurn(gameState) && (
                     <button
                         type="button"
                         onClick={() => { setSelected(null); onPassTurn() }}
@@ -149,7 +155,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
 
             {winner && (
                 <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/70">
-                    <div className="flex flex-col items-center gap-4 rounded-lg bg-white p-8 text-black">
+                    <div className="flex flex-col items-center gap-4 rounded-lg bg-white p-8 text-black!">
                         <h2 className="text-3xl font-bold">{winner} wins!</h2>
                         <p>They emptied their stock pile first.</p>
                         <button
