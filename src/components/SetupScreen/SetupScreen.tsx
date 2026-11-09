@@ -9,7 +9,7 @@ const range = (from: number, to: number) => Array.from({length: Math.max(to - fr
 
 const SetupScreen = ({onStart}: SetupScreenProps) => {
     const [names, setNames] = useState<string[]>(["Player 1", "Player 2"])
-    const [computerCount, setComputerCount] = useState(1)
+    const [computerCount, setComputerCount] = useState(0)
 
     const humanCount = names.length
     const totalPlayers = humanCount + computerCount
