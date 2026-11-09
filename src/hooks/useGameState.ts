@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import type { CardSource, GameState } from "../helpers/types"
 import {
     createInitialState,
@@ -7,12 +7,27 @@ import {
     passTurn as passTurnLogic,
     playCard as playCardLogic,
 } from "../helpers/gameStateHelper"
+import { getComputerMove } from "../helpers/computerPlayer"
 
 export const useGameState = () => {
     const [gameState, setGameState] = useState<GameState>(createInitialState)
 
-    const startGame = (playerNames: string[]) => {
-        setGameState(createNewGame(playerNames))
+    useEffect(() => {
+    if (!gameState.gameStarted || gameState.winner) return
+    if (!gameState.players[gameState.currentPlayer].isComputer) return
+
+    const timer = setTimeout(() => {
+        const move = getComputerMove(gameState)
+        if (move.type === "play") playCard(move.source, move.buildingIndex)
+        else if (move.type === "discard") discardCard(move.cardId, move.discardIndex)
+        else passTurn()
+    }, 800)
+
+    return () => clearTimeout(timer)
+}, [gameState])
+
+    const startGame = (playerNames: string[], computerCount = 0) => {
+        setGameState(createNewGame(playerNames, computerCount))
     }
 
     // Play a card (stock top, hand card, or discard top) onto a building pile

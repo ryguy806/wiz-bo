@@ -2,25 +2,36 @@ import { useState, type SubmitEvent } from "react"
 import { MAX_PLAYERS, MIN_PLAYERS, getStockSize } from "../../helpers/gameStateHelper"
 
 type SetupScreenProps = {
-    onStart: (playerNames: string[]) => void
+    onStart: (playerNames: string[], computerCount: number) => void
 }
+
+const range = (from: number, to: number) => Array.from({length: Math.max(to - from + 1, 0)}, (_, i) => from + i)
 
 const SetupScreen = ({onStart}: SetupScreenProps) => {
     const [names, setNames] = useState<string[]>(["Player 1", "Player 2"])
+    const [computerCount, setComputerCount] = useState(1)
+
+    const humanCount = names.length
+    const totalPlayers = humanCount + computerCount
+
+    const minComputers = Math.max(0, MIN_PLAYERS - humanCount)
+    const maxComputers = MAX_PLAYERS - humanCount
 
     const setName = (index: number, value: string) =>
         setNames((prev) => prev.map((n, i) => (i === index ? value : n)))
 
-    const setPlayerCount = (count: number) =>
+    const setHumanCount = (count: number) => {
         setNames((prev) =>
             count > prev.length
                 ? [...prev, ...Array.from({length: count - prev.length}, (_, i) => `Player ${prev.length + i + 1}`)]
-                : prev.slice(0, count)
-        )
+                 : prev.slice(0, count
+        ))
+        setComputerCount((prev) => Math.min(Math.max(prev, Math.max(0, MIN_PLAYERS - count)), MAX_PLAYERS - count))
+    }
 
     const handleSubmit = (e: SubmitEvent) => {
         e.preventDefault()
-        onStart(names.map((n, i) => n.trim() || `Player ${i + 1}`))
+        onStart(names.map((n, i) => n.trim() || `Player ${i + 1}`), computerCount)
     }
 
     return (
@@ -29,18 +40,31 @@ const SetupScreen = ({onStart}: SetupScreenProps) => {
                 <h1 className="text-center text-4xl font-bold"><span className="text-sky-900">Wiz-Bo</span></h1>
 
                 <label className="flex flex-col gap-1">
-                    <span className="font-semibold">Number of players</span>
+                    <span className="font-semibold">Human players</span>
                     <select
-                        value={names.length}
-                        onChange={(e) => setPlayerCount(parseInt(e.target.value))}
+                        value={humanCount}
+                        onChange={(e) => setHumanCount(parseInt(e.target.value))}
                         className="rounded border p-2"
                     >
-                        {Array.from({length: MAX_PLAYERS - MIN_PLAYERS + 1}, (_, i) => MIN_PLAYERS + i).map((n) => (
+                        {range(1, MAX_PLAYERS).map((n) => (
+                            <option key={n} value={n}>{n}</option>
+                        ))}
+                    </select>
+                </label>
+
+                <label className="flex flex-col gap-1">
+                    <span className="font-semibold">Computer players</span>
+                    <select
+                        value={computerCount}
+                        onChange={(e) => setComputerCount(parseInt(e.target.value))}
+                        className="rounded border p-2"
+                    >
+                        {range(minComputers, maxComputers).map((n) => (
                             <option key={n} value={n}>{n}</option>
                         ))}
                     </select>
                     <span className="text-sm text-gray-500">
-                        Each player gets {getStockSize(names.length)} stock cards.
+                        {totalPlayers} players total. Each gets {getStockSize(totalPlayers)} stock cards.
                     </span>
                 </label>
 

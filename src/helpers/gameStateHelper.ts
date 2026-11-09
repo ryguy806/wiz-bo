@@ -128,7 +128,12 @@ export const createInitialState = (): GameState => ({
     winner: null,
 })
 
-export const createNewGame = (playerNames: string[]): GameState => {
+export const createNewGame = (playerNames: string[], computerCount: number = 0): GameState => {
+    const computerNames = Array.from({ length: computerCount }, (_, i) =>
+        computerCount === 1 ? "Computer" : `Computer ${i + 1}`
+    )
+    playerNames = [...playerNames, ...computerNames]
+
     const deck = createDeck()
     const stockSize = getStockSize(playerNames.length)
 
@@ -138,6 +143,7 @@ export const createNewGame = (playerNames: string[]): GameState => {
         stockPile: deck.splice(0, stockSize),
         hand: [],
         discardPiles: Array.from({ length: DISCARD_PILE_COUNT }, () => [] as Card[]),
+        isComputer: i >= playerNames.length,
     }))
 
     return refillHand({

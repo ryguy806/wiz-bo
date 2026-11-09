@@ -11,6 +11,7 @@ export interface Player {
     stockPile: Card[]
     hand: Card[]
     discardPiles: Card[][]
+    isComputer: boolean
 }
 
 export interface GameState {
