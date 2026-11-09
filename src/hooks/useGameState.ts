@@ -26,6 +26,7 @@ export const useGameState = () => {
     }, [gameState])
 
     const startGame = (playerNames: string[], computerCount = 0) => {
+        console.log("startGame", playerNames, computerCount)
         setGameState(createNewGame(playerNames, computerCount))
     }
 

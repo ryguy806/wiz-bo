@@ -30,7 +30,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
         return true
     }
 
-    // Clicking the already-selected card puts it back down
+    // Clicking the already-selected card puts it back down. Ignored on the computer's turn
     const toggleSelect = (source: CardSource) => {
         if (isComputerTurn) return
         setSelected(isSelected(source) ? null : source)
@@ -90,7 +90,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
                             name={`Build ${i + 1}`}
                             cards={pile}
                             onClick={() => handleBuildingClick(i)}
-                            highlight={!!selectedCard && validatePlay(selectedCard, pile)}
+                            highlight={!isComputerTurn && !!selectedCard && validatePlay(selectedCard, pile)}
                         />
                     ))}
                 </div>
@@ -127,7 +127,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
                                 deck={pile}
                                 faceUp={true}
                                 selected={isSelected({from: "discard", pile: i})}
-                                highlight={selected?.from === "hand"}
+                                highlight={!isComputerTurn && selected?.from === "hand"}
                                 onClick={() => handleDiscardClick(i)}
                             />
                             <span className="text-xs text-white/70">Discard {i + 1}</span>
@@ -155,8 +155,8 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
 
             {winner && (
                 <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/70">
-                    <div className="flex flex-col items-center gap-4 rounded-lg bg-white p-8 text-black!">
-                        <h2 className="text-3xl font-bold">{winner} wins!</h2>
+                    <div className="flex flex-col items-center gap-4 rounded-lg bg-white p-8 text-black">
+                        <h2 className="text-3xl font-bold text-black!">{winner} wins!</h2>
                         <p>They emptied their stock pile first.</p>
                         <button
                             type="button"

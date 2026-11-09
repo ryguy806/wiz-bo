@@ -79,9 +79,6 @@ export const getTextColor = (number: number): string => {
     }
 }
 
-/* ---------- Game logic (pure functions: state in, new state out) ---------- */
-
-// Takes `count` cards from the draw pile. If it runs dry, the completed piles are reshuffled into it.
 const drawCards = (drawPile: Card[], completedPile: Card[], count: number) => {
     let draw = [...drawPile]
     let completed = [...completedPile]
@@ -128,11 +125,11 @@ export const createInitialState = (): GameState => ({
     winner: null,
 })
 
-export const createNewGame = (playerNames: string[], computerCount: number = 0): GameState => {
+export const createNewGame = (humanNames: string[], computerCount: number = 0): GameState => {
     const computerNames = Array.from({ length: computerCount }, (_, i) =>
         computerCount === 1 ? "Computer" : `Computer ${i + 1}`
     )
-    playerNames = [...playerNames, ...computerNames]
+    const playerNames = [...humanNames, ...computerNames]
 
     const deck = createDeck()
     const stockSize = getStockSize(playerNames.length)
@@ -143,7 +140,7 @@ export const createNewGame = (playerNames: string[], computerCount: number = 0):
         stockPile: deck.splice(0, stockSize),
         hand: [],
         discardPiles: Array.from({ length: DISCARD_PILE_COUNT }, () => [] as Card[]),
-        isComputer: i >= playerNames.length,
+        isComputer: i >= humanNames.length,
     }))
 
     return refillHand({
