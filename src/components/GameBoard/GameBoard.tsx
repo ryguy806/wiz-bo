@@ -5,6 +5,7 @@ import Deck from "../Deck/Deck"
 import BuildingPiles from "../Deck/BuildingPiles"
 import Hand from "../Hand/Hand"
 import OpponentArea from "../Players/OpponentsArea"
+import SparkleEffect from "../MagicEffects/SparkleEffect"
 
 type GameBoardProps = {
     gameState: GameState
@@ -60,7 +61,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
     }
 
     return (
-        <div className="flex min-h-screen flex-col gap-6 p-4 text-white">
+        <div className="flex max-h-screen flex-col gap-6 p-4 text-white">
             <header className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold">Wiz-Bo</h1>
                 <button
@@ -155,6 +156,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
 
             {winner && (
                 <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/70">
+                    <SparkleEffect />
                     <div className="flex flex-col items-center gap-4 rounded-lg bg-white p-8 text-black">
                         <h2 className="text-3xl font-bold text-black!">{winner} wins!</h2>
                         <p>They emptied their stock pile first.</p>

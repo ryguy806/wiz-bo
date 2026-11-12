@@ -129,10 +129,10 @@ const MistBackground = ({colorA = "#1a2a6c", colorB = "#7b4fbf", intensity = 0.3
             "(prefers-reduced-motion: reduce)"
         ).matches;
 
-        const clock = new THREE.Clock();
+        const clock = new THREE.Timer();
         let frameId = 0;
         const animate = () => {
-            material.uniforms.uTime.value = clock.getElapsedTime();
+            material.uniforms.uTime.value = clock.getElapsed();
             renderer.render(scene, camera);
             if (!reduceMotion) frameId = requestAnimationFrame(animate);
         };
