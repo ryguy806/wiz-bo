@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
-import { div } from 'three/tsl'
 
 type SparkleProps = {
     count?: number,
