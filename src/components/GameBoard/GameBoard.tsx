@@ -42,6 +42,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
         if (!selected || selected.from !== source.from) return false
         if (source.from === "hand" && selected.from === "hand") return source.cardId === selected.cardId
         if (source.from === "discard" && selected.from === "discard") return source.pile === selected.pile
+        if (source.from === "discard" && selected.from === "discard") return source.pile === selected.pile
         return true
     }
 
@@ -67,13 +68,20 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
         }
     }
 
+    const findDragSource = (cardId: string): CardSource | null => {
+        if (active.hand.some((c) => c.id === cardId)) return {from: "hand", cardId}
+        const pile = active.discardPiles.findIndex((p) => p[p.length - 1]?.id === cardId)
+        return pile >= 0 ? {from: "discard", pile} : null
+    }
+
     
     const handleDragStart = (event: DragStartEvent) => {
         if (winner || isComputerTurn) return
-        const card = active.hand.find((c) => c.id === event.active.id)
-        if (!card) return
+        const source = findDragSource(String(event.active.id))
+        const card = source ? getSourceCard(active, source) : undefined
+        if(!source || !card) return
 
-        setSelected({from: "hand", cardId: card.id})
+        setSelected(source)
         setDraggingCard(card)
     }
 
@@ -85,11 +93,12 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
         setDraggingCard(null)
 
         if (!overId || winner || isComputerTurn) return
-        if (!active.hand.some((c) => c.id === cardId)) return
+        const source = findDragSource(cardId)
 
+        if (!source) return
         if (overId.startsWith("build-")) {
-            onPlayCard({from: "hand", cardId}, Number(overId.slice("build-".length)))
-        } else if (overId.startsWith("discard-")) {
+            onPlayCard(source, Number(overId.slice("build-".length)))
+        } else if (overId.startsWith("discard-") && source.from === "hand") {
             onDiscard(cardId, Number(overId.slice("discard-".length)))
         }
     }
@@ -113,120 +122,121 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
             onDragCancel={handleDragCancel}
-        >    
-            <div className="flex max-h-screen flex-col gap-6 p-4 text-white">
-                <header className="flex items-center justify-between">
-                    <h1 className="text-3xl font-bold">Wiz-Bo</h1>
+        >
+        <div className="flex max-h-screen flex-col gap-6 p-4 text-white">
+            <header className="flex items-center justify-between">
+                <h1 className="text-3xl font-bold">Wiz-Bo</h1>
+                <button
+                    type="button"
+                    onClick={onNewGame}
+                    className="rounded bg-white/20 px-3 py-1 hover:bg-white/30"
+                >
+                    New game
+                </button>
+            </header>
+ 
+            {opponents.length > 0 && (
+                <section className="flex flex-wrap justify-center gap-4">
+                    {opponents.map((player) => <OpponentArea key={player.id} player={player} />)}
+                </section>
+            )}
+ 
+            <section className="flex flex-wrap items-start justify-center gap-10">
+                <div className="flex flex-col items-center gap-3">
+                    <Deck name="Draw pile" deck={drawPile} faceUp={false} />
+                    <span className="text-xs text-white/70">Draw pile</span>
+                </div>
+                <div className="flex flex-wrap items-start justify-center gap-6">
+                    {buildingPiles.map((pile, i) => (
+                        <BuildingPiles
+                            key={i}
+                            name={`Build ${i + 1}`}
+                            dropId={`build-${i}`}
+                            cards={pile}
+                            onClick={() => handleBuildingClick(i)}
+                            highlight={!isComputerTurn && !!selectedCard && validatePlay(selectedCard, pile)}
+                        />
+                    ))}
+                </div>
+                <div className="flex flex-col items-center gap-3">
+                    <div className="flex h-32 w-24 items-center justify-center rounded border-2 border-dashed border-white/40 text-center text-sm text-white/60">
+                        {completedPile.length} completed
+                    </div>
+                    <span className="text-xs text-white/70">Completed</span>
+                </div>
+            </section>
+ 
+            <section className="mt-auto flex flex-col items-center gap-4 rounded-lg bg-black/30 p-4">
+                <h2 className="text-xl font-semibold">
+                    {active.name}'s turn{isComputerTurn && " (thinking...)"}
+                </h2>
+                {!isComputerTurn && <p className="text-sm text-white/80">{instruction}</p>}
+ 
+                <div className="flex flex-wrap items-start justify-center gap-6">
+                    <div className="flex flex-col items-center gap-1">
+                        <Deck
+                            name="Stock"
+                            deck={active.stockPile}
+                            faceUp={true}
+                            selected={isSelected({from: "stock"})}
+                            onClick={() => toggleSelect({from: "stock"})}
+                        />
+                        <span className="text-xs text-white/70">Stock ({active.stockPile.length} left)</span>
+                    </div>
+ 
+                    {active.discardPiles.map((pile, i) => (
+                        <div key={i} className="flex flex-col items-center gap-1">
+                            <Deck
+                                name={`Discard ${i + 1}`}
+                                dropId={`discard-${i}`}
+                                draggable={!isComputerTurn && !winner}
+                                deck={pile}
+                                faceUp={true}
+                                selected={isSelected({from: "discard", pile: i})}
+                                highlight={!isComputerTurn && selected?.from === "hand"}
+                                onClick={() => handleDiscardClick(i)}
+                            />
+                            <span className="text-xs text-white/70">Discard {i + 1}</span>
+                        </div>
+                    ))}
+                </div>
+ 
+                <Hand
+                    faceUp={!isComputerTurn}
+                    cards={active.hand}
+                    selectedId={selected?.from === "hand" ? selected.cardId : null}
+                    onSelect={(card) => toggleSelect({from: "hand", cardId: card.id})}
+                    dragDisabled={isComputerTurn || !!winner}
+                />
+ 
+                {!isComputerTurn && canPassTurn(gameState) && (
                     <button
                         type="button"
-                        onClick={onNewGame}
-                        className="rounded bg-white/20 px-3 py-1 hover:bg-white/30"
+                        onClick={() => { setSelected(null); onPassTurn() }}
+                        className="rounded bg-yellow-500 px-4 py-2 font-semibold text-black hover:bg-yellow-400"
                     >
-                        New game
+                        No cards left in hand: pass turn
                     </button>
-                </header>
-
-                {opponents.length > 0 && (
-                    <section className="flex flex-wrap justify-center gap-4">
-                        {opponents.map((player) => <OpponentArea key={player.id} player={player} />)}
-                    </section>
                 )}
-
-                <section className="flex flex-wrap items-start justify-center gap-10">
-                    <div className="flex flex-col items-center gap-3">
-                        <Deck name="Draw pile" deck={drawPile} faceUp={false} />
-                        <span className="text-xs text-white/70">Draw pile</span>
-                    </div>
-                    <div className="flex flex-wrap items-start justify-center gap-6">
-                        {buildingPiles.map((pile, i) => (
-                            <BuildingPiles
-                                key={i}
-                                name={`Build ${i + 1}`}
-                                dropId={`build-${i}`}
-                                cards={pile}
-                                onClick={() => handleBuildingClick(i)}
-                                highlight={!isComputerTurn && !!selectedCard && validatePlay(selectedCard, pile)}
-                            />
-                        ))}
-                    </div>
-                    <div className="flex flex-col items-center gap-3">
-                        <div className="flex h-32 w-24 items-center justify-center rounded border-2 border-dashed border-white/40 text-center text-sm text-white/60">
-                            {completedPile.length} completed
-                        </div>
-                        <span className="text-xs text-white/70">Completed</span>
-                    </div>
-                </section>
-
-                <section className="mt-auto flex flex-col items-center gap-4 rounded-lg bg-black/30 p-4">
-                    <h2 className="text-xl font-semibold">
-                        {active.name}'s turn{isComputerTurn && " (thinking...)"}
-                    </h2>
-                    {!isComputerTurn && <p className="text-sm text-white/80">{instruction}</p>}
-
-                    <div className="flex flex-wrap items-start justify-center gap-6">
-                        <div className="flex flex-col items-center gap-1">
-                            <Deck
-                                name="Stock"
-                                deck={active.stockPile}
-                                faceUp={true}
-                                selected={isSelected({from: "stock"})}
-                                onClick={() => toggleSelect({from: "stock"})}
-                            />
-                            <span className="text-xs text-white/70">Stock ({active.stockPile.length} left)</span>
-                        </div>
-
-                        {active.discardPiles.map((pile, i) => (
-                            <div key={i} className="flex flex-col items-center gap-1">
-                                <Deck
-                                    name={`Discard ${i + 1}`}
-                                    dropId={`discard-${i}`}
-                                    deck={pile}
-                                    faceUp={true}
-                                    selected={isSelected({from: "discard", pile: i})}
-                                    highlight={!isComputerTurn && selected?.from === "hand"}
-                                    onClick={() => handleDiscardClick(i)}
-                                />
-                                <span className="text-xs text-white/70">Discard {i + 1}</span>
-                            </div>
-                        ))}
-                    </div>
-
-                    <Hand
-                        faceUp={!isComputerTurn}
-                        cards={active.hand}
-                        selectedId={selected?.from === "hand" ? selected.cardId : null}
-                        onSelect={(card) => toggleSelect({ from: "hand", cardId: card.id })}
-                        dragDisabled={false}                    />
-
-                    {!isComputerTurn && canPassTurn(gameState) && (
+            </section>
+ 
+            {winner && (
+                <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/70">
+                    <SparkleEffect />
+                    <div className="flex flex-col items-center gap-4 rounded-lg bg-white p-8 text-black">
+                        <h2 className="text-3xl font-bold text-black!">{winner} wins!</h2>
+                        <p>They emptied their stock pile first.</p>
                         <button
                             type="button"
-                            onClick={() => { setSelected(null); onPassTurn() }}
-                            className="rounded bg-yellow-500 px-4 py-2 font-semibold text-black hover:bg-yellow-400"
+                            onClick={onNewGame}
+                            className="rounded bg-emerald-700 px-4 py-2 font-semibold text-white hover:bg-emerald-600"
                         >
-                            No cards left in hand: pass turn
+                            Play again
                         </button>
-                    )}
-                </section>
-
-                {winner && (
-                    <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/70">
-                        <SparkleEffect />
-                        <div className="flex flex-col items-center gap-4 rounded-lg bg-white p-8 text-black">
-                            <h2 className="text-3xl font-bold text-black!">{winner} wins!</h2>
-                            <p>They emptied their stock pile first.</p>
-                            <button
-                                type="button"
-                                onClick={onNewGame}
-                                className="rounded bg-emerald-700 px-4 py-2 font-semibold text-white hover:bg-emerald-600"
-                            >
-                                Play again
-                            </button>
-                        </div>
                     </div>
-                )}
-            </div>
-
+                </div>
+            )}
+ 
             <DragOverlay>
                 {draggingCard && (
                     <div className="rotate-3 cursor-grabbing">
@@ -234,6 +244,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
                     </div>
                 )}
             </DragOverlay>
+        </div>
         </DndContext>
     )
 }

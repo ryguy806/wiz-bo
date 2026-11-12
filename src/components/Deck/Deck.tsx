@@ -1,8 +1,10 @@
 import type { Card } from "../../helpers/types"
 import CardItem from "../Card/CardItem"
 import { useDroppable } from "@dnd-kit/core"
+import DraggableCard from "../Card/DraggableCard"
 
 type DeckProps = {
+    draggable?: boolean
     name: string
     dropId?: string
     deck: Card[]
@@ -13,7 +15,7 @@ type DeckProps = {
 }
 
 // Shows a pile as its top card plus a count badge, or an empty slot with the pile's name
-const Deck = ({name, dropId, deck, faceUp, selected = false, onClick, highlight = false}: DeckProps) => {
+const Deck = ({draggable = false, name, dropId, deck, faceUp, selected = false, onClick, highlight = false}: DeckProps) => {
   const interactive = onClick !== undefined
   const topCard = deck[deck.length - 1]
   const {setNodeRef, isOver} = useDroppable({id: dropId ?? name, disabled: dropId === undefined})
@@ -32,7 +34,13 @@ const Deck = ({name, dropId, deck, faceUp, selected = false, onClick, highlight 
                 </div>
             ) : (
                 <div className={`rounded ${highlight ? "ring-4 ring-yellow-400/70" : ""}`}>
-                    <CardItem card={topCard} faceUp={faceUp} selected={selected} onClick={onClick} />
+                    {
+                        draggable ? (
+                            <DraggableCard card={topCard} faceUp={faceUp} selected={selected} onClick={onClick} />
+                        ) : (
+                            <CardItem card={topCard} faceUp={faceUp} selected={selected} onClick={onClick} />
+                        )
+                    }
                 </div>
             )
         }
