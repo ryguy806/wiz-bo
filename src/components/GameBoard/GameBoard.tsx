@@ -71,7 +71,9 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
     const findDragSource = (cardId: string): CardSource | null => {
         if (active.hand.some((c) => c.id === cardId)) return {from: "hand", cardId}
         const pile = active.discardPiles.findIndex((p) => p[p.length - 1]?.id === cardId)
-        return pile >= 0 ? {from: "discard", pile} : null
+        if (pile >= 0) return {from: "discard", pile}
+        const stockTop = active.stockPile[active.stockPile.length - 1]
+        return stockTop?.id === cardId ? {from: "stock"} : null
     }
 
     
@@ -177,6 +179,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
                         <Deck
                             name="Stock"
                             deck={active.stockPile}
+                            draggable={!isComputerTurn && !winner}
                             faceUp={true}
                             selected={isSelected({from: "stock"})}
                             onClick={() => toggleSelect({from: "stock"})}
