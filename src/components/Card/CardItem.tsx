@@ -24,7 +24,7 @@ const CardItem = ({card, faceUp, selected = false, onClick}: CardItemProps) => {
                     onClick()
                 }
             } : undefined}
-            className={`group h-32 w-24 rounded transition-transform
+            className={`group h-24 w-18 rounded transition-transform
                 ${interactive ? "cursor-pointer hover:-translate-y-1" : ""}
                 ${selected ? "-translate-y-3 ring-4 ring-yellow-400" : ""}`}
         >

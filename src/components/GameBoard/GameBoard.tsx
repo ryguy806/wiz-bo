@@ -17,6 +17,7 @@ import {
     type DragStartEvent
 } from '@dnd-kit/core'
 import CardItem from "../Card/CardItem"
+import Menu from "../Layout/Menu"
 
 type GameBoardProps = {
     gameState: GameState
@@ -125,26 +126,19 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
             onDragEnd={handleDragEnd}
             onDragCancel={handleDragCancel}
         >
-        <div className="flex max-h-screen flex-col gap-6 p-4 text-white">
-            <header className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold">Wiz-Bo</h1>
-                <button
-                    type="button"
-                    onClick={onNewGame}
-                    className="rounded bg-white/20 px-3 py-1 hover:bg-white/30"
-                >
-                    New game
-                </button>
+        <div className="flex max-h-full flex-col gap-3 p-4 text-white relative">
+            <header className="absolute top-5 right-5">
+                <Menu onNewGame={onNewGame}/>
             </header>
  
             {opponents.length > 0 && (
-                <section className="flex flex-wrap justify-center gap-4">
+                <section className="flex flex-wrap justify-center gap-2">
                     {opponents.map((player) => <OpponentArea key={player.id} player={player} />)}
                 </section>
             )}
  
-            <section className="flex flex-wrap items-start justify-center gap-10">
-                <div className="flex flex-col items-center gap-3">
+            <section className="flex flex-wrap items-start justify-center gap-5">
+                <div className="flex flex-col items-center gap-1">
                     <Deck name="Draw pile" deck={drawPile} faceUp={false} />
                     <span className="text-xs text-white/70">Draw pile</span>
                 </div>
@@ -160,16 +154,16 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
                         />
                     ))}
                 </div>
-                <div className="flex flex-col items-center gap-3">
-                    <div className="flex h-32 w-24 items-center justify-center rounded border-2 border-dashed border-white/40 text-center text-sm text-white/60">
+                <div className="flex flex-col items-center gap-1">
+                    <div className="flex h-24 w-18 items-center justify-center rounded border-2 border-dashed border-white/40 text-center text-sm text-white/60">
                         {completedPile.length} completed
                     </div>
                     <span className="text-xs text-white/70">Completed</span>
                 </div>
             </section>
  
-            <section className="mt-auto flex flex-col items-center gap-4 rounded-lg bg-black/30 p-4">
-                <h2 className="text-xl font-semibold">
+            <section className="mt-auto flex flex-col items-center gap-2 rounded-lg bg-black/30 p-1">
+                <h2 className="text-base font-semibold">
                     {active.name}'s turn{isComputerTurn && " (thinking...)"}
                 </h2>
                 {!isComputerTurn && <p className="text-sm text-white/80">{instruction}</p>}
@@ -211,22 +205,12 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
                     onSelect={(card) => toggleSelect({from: "hand", cardId: card.id})}
                     dragDisabled={isComputerTurn || !!winner}
                 />
- 
-                {!isComputerTurn && canPassTurn(gameState) && (
-                    <button
-                        type="button"
-                        onClick={() => { setSelected(null); onPassTurn() }}
-                        className="rounded bg-yellow-500 px-4 py-2 font-semibold text-black hover:bg-yellow-400"
-                    >
-                        No cards left in hand: pass turn
-                    </button>
-                )}
             </section>
  
             {winner && (
                 <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/70">
                     <SparkleEffect />
-                    <div className="flex flex-col items-center gap-4 rounded-lg bg-white p-8 text-black">
+                    <div className="flex flex-col items-center gap-2 rounded-lg bg-white p-8 text-black">
                         <h2 className="text-3xl font-bold text-black!">{winner} wins!</h2>
                         <p>They emptied their stock pile first.</p>
                         <button

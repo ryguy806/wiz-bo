@@ -21,7 +21,7 @@ const Deck = ({draggable = false, name, dropId, deck, faceUp, selected = false, 
   const {setNodeRef, isOver} = useDroppable({id: dropId ?? name, disabled: dropId === undefined})
 
   return (
-    <div id={name} ref={setNodeRef} className={`relative h-32 w-24 rounded transition-shadow ${isOver ? "ring-4 ring-yellow-500" : ""}`}>
+    <div id={name} ref={setNodeRef} className={`relative h-24 w-18 rounded transition-shadow ${isOver ? "ring-4 ring-yellow-500" : ""}`}>
         {
             !topCard ? (
                 <div

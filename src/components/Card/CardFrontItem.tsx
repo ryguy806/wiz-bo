@@ -27,10 +27,10 @@ const CardFrontItem = ({id, value}: Card) => {
     const icon = getTextIcon(num)
     const textColor = getTextColor(num)
     const pips = PIP_LAYOUTS[num] ?? []
-    const pipSize = num >= 9 ? "text-base" : num === 1 ? "text-4xl" : "text-xl"
+    const pipSize = num >= 9 ? "text-sm" : num === 1 ? "text-2xl" : "text-base"
 
     return (
-        <div id={id} className="border border-black bg-white h-32 w-24 flex items-center justify-center">
+        <div id={id} className="border border-black bg-white h-24 w-18 flex items-center justify-center">
             <div className={`isolate relative ${textColor} size-full flex justify-center items-center`}>
                 {!(value === 'WIZ-BO') ? (
                     <>
