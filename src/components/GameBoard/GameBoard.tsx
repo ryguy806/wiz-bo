@@ -32,7 +32,7 @@ type Side = "top" | "left" | "right"
 // SEAT_SCALE shrinks the cards; SEAT_THICKNESS is how far the seat reaches in from the edge.
 const SEAT_SCALE = 0.6
 const SEAT_THICKNESS = "9rem"
-const SEAT_ROTATION: Record<Side, number> = {top: 180, left: 90, right: -90}
+const SEAT_ROTATION: Record<Side, number> = {top: 0, left: 90, right: -90}
 
 const noop = () => {}
 
@@ -45,9 +45,6 @@ type EdgeSeatProps = {
 const EdgeSeat = ({player, side, isTurn}: EdgeSeatProps) => {
     const vertical = side !== "top"
 
-    // The wrapper is the box the seat occupies on screen. Rotating with CSS doesn't change
-    // layout size, so the inner box gets its length/thickness swapped (via container units)
-    // for the sideways seats, then is rotated and scaled to fill the wrapper exactly.
     const wrapperStyle: React.CSSProperties = vertical
         ? {containerType: "size", width: SEAT_THICKNESS, height: "100%"}
         : {containerType: "size", height: SEAT_THICKNESS, width: "min(100%, 48rem)"}

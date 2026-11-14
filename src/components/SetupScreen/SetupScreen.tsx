@@ -38,47 +38,50 @@ const SetupScreen = ({onStart}: SetupScreenProps) => {
         <div className="flex min-h-screen items-center justify-center bg-olive-700 p-4">
             <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-4 rounded-lg text-black bg-taupe-300 p-6 shadow-lg">
                 <h1 className="text-center text-4xl font-bold"><span className="text-sky-900">Wiz-Bo</span></h1>
-
-                <label className="flex flex-col gap-1">
-                    <span className="font-semibold">Human players</span>
-                    <select
-                        value={humanCount}
-                        onChange={(e) => setHumanCount(parseInt(e.target.value))}
-                        className="rounded border p-2"
-                    >
-                        {range(1, MAX_PLAYERS).map((n) => (
-                            <option key={n} value={n}>{n}</option>
-                        ))}
-                    </select>
-                </label>
-
-                <label className="flex flex-col gap-1">
-                    <span className="font-semibold">Computer players</span>
-                    <select
-                        value={computerCount}
-                        onChange={(e) => setComputerCount(parseInt(e.target.value))}
-                        className="rounded border p-2"
-                    >
-                        {range(minComputers, maxComputers).map((n) => (
-                            <option key={n} value={n}>{n}</option>
-                        ))}
-                    </select>
-                    <span className="text-sm text-gray-500">
-                        {totalPlayers} players total. Each gets {getStockSize(totalPlayers)} stock cards.
-                    </span>
-                </label>
-
-                {names.map((name, i) => (
-                    <label key={i} className="flex flex-col gap-1">
-                        <span className="text-sm font-semibold">Player {i + 1} name</span>
-                        <input
-                            value={name}
-                            onChange={(e) => setName(i, e.target.value)}
-                            maxLength={20}
+                <div  className="flex flex-col gap-2 border border-gray-500 p-2 rounded">
+                    <label className="flex flex-col gap-1">
+                        <span className="font-semibold">Human Players</span>
+                        <select
+                            value={humanCount}
+                            onChange={(e) => setHumanCount(parseInt(e.target.value))}
                             className="rounded border p-2"
-                        />
+                        >
+                            {range(1, MAX_PLAYERS).map((n) => (
+                                <option key={n} value={n}>{n}</option>
+                            ))}
+                        </select>
                     </label>
-                ))}
+
+                    <label className="flex flex-col gap-1">
+                        <span className="font-semibold">Computer Players</span>
+                        <select
+                            value={computerCount}
+                            onChange={(e) => setComputerCount(parseInt(e.target.value))}
+                            className="rounded border p-2"
+                        >
+                            {range(minComputers, maxComputers).map((n) => (
+                                <option key={n} value={n}>{n}</option>
+                            ))}
+                        </select>
+                    </label>
+                </div>
+                <div className="flex flex-col gap-2 border border-gray-500 p-2 rounded">
+                    <div className="font-semibold">
+                        Enter Player Names:
+                    </div>
+                    {names.map((name, i) => (
+                        <label key={i} className="flex flex-col gap-1">
+                            <input
+                                value={name}
+                                onChange={(e) => setName(i, e.target.value)}
+                                maxLength={20}
+                                placeholder={`Player ${i}`}
+                                defaultValue={`Player ${i}`}
+                                className="rounded border p-2"
+                            />
+                        </label>
+                    ))}
+                </div>
 
                 <button
                     type="submit"
