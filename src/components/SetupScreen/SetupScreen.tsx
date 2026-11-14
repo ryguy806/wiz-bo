@@ -52,7 +52,7 @@ const SetupScreen = ({onStart}: SetupScreenProps) => {
                         </select>
                     </label>
 
-                    <label className="flex flex-col gap-1">
+                    <label className="flex flex-col gap-1 pb-2">
                         <span className="font-semibold">Computer Players</span>
                         <select
                             value={computerCount}
@@ -69,18 +69,20 @@ const SetupScreen = ({onStart}: SetupScreenProps) => {
                     <div className="font-semibold">
                         Enter Player Names:
                     </div>
-                    {names.map((name, i) => (
-                        <label key={i} className="flex flex-col gap-1">
-                            <input
-                                value={name}
-                                onChange={(e) => setName(i, e.target.value)}
-                                maxLength={20}
-                                placeholder={`Player ${i}`}
-                                defaultValue={`Player ${i}`}
-                                className="rounded border p-2"
-                            />
-                        </label>
-                    ))}
+                    <div className="pb-2">
+                        {names.map((name, i) => (
+                            <label key={i} className="flex flex-col gap-1">
+                                <input
+                                    value={name}
+                                    onChange={(e) => setName(i, e.target.value)}
+                                    maxLength={20}
+                                    placeholder={`Player ${i}`}
+                                    defaultValue={`Player ${i}`}
+                                    className="rounded border p-2"
+                                />
+                            </label>
+                        ))}
+                    </div>
                 </div>
 
                 <button
