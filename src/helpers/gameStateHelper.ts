@@ -4,7 +4,7 @@ export const HAND_SIZE = 5
 export const BUILDING_PILE_COUNT = 4
 export const DISCARD_PILE_COUNT = 4
 export const MIN_PLAYERS = 2
-export const MAX_PLAYERS = 6
+export const MAX_PLAYERS = 4
 
 // Official Skip-Bo rules: 30 stock cards for 2-4 players, 20 for 5-6 players
 export const getStockSize = (playerCount: number): number => (playerCount <= 4 ? 30 : 20)
