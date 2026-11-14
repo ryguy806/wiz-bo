@@ -1,19 +1,18 @@
 import { useState } from "react"
-import type { Card, CardSource, GameState } from "../../helpers/types"
-import { canPassTurn, getSourceCard, validatePlay } from "../../helpers/gameStateHelper"
+import type { Card, CardSource, GameState, Player } from "../../helpers/types"
+import { getSourceCard, validatePlay } from "../../helpers/gameStateHelper"
 import Deck from "../Deck/Deck"
 import BuildingPiles from "../Deck/BuildingPiles"
 import Hand from "../Hand/Hand"
-import OpponentArea from "../Players/OpponentsArea"
 import SparkleEffect from "../MagicEffects/SparkleEffect"
 import {
     DndContext,
-    DragOverlay, 
-    PointerSensor, 
-    pointerWithin, 
-    useSensor, 
-    useSensors, 
-    type DragEndEvent, 
+    DragOverlay,
+    PointerSensor,
+    pointerWithin,
+    useSensor,
+    useSensors,
+    type DragEndEvent,
     type DragStartEvent
 } from '@dnd-kit/core'
 import CardItem from "../Card/CardItem"
@@ -27,7 +26,71 @@ type GameBoardProps = {
     onNewGame: () => void
 }
 
-const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: GameBoardProps) => {
+type Side = "top" | "left" | "right"
+
+// Opponent seats are laid out at normal size, then shrunk and rotated to hug an edge.
+// SEAT_SCALE shrinks the cards; SEAT_THICKNESS is how far the seat reaches in from the edge.
+const SEAT_SCALE = 0.6
+const SEAT_THICKNESS = "9rem"
+const SEAT_ROTATION: Record<Side, number> = {top: 180, left: 90, right: -90}
+
+const noop = () => {}
+
+type EdgeSeatProps = {
+    player: Player
+    side: Side
+    isTurn: boolean
+}
+
+const EdgeSeat = ({player, side, isTurn}: EdgeSeatProps) => {
+    const vertical = side !== "top"
+
+    // The wrapper is the box the seat occupies on screen. Rotating with CSS doesn't change
+    // layout size, so the inner box gets its length/thickness swapped (via container units)
+    // for the sideways seats, then is rotated and scaled to fill the wrapper exactly.
+    const wrapperStyle: React.CSSProperties = vertical
+        ? {containerType: "size", width: SEAT_THICKNESS, height: "100%"}
+        : {containerType: "size", height: SEAT_THICKNESS, width: "min(100%, 48rem)"}
+
+    const innerStyle: React.CSSProperties = {
+        width: `calc(${vertical ? "100cqh" : "100cqw"} / ${SEAT_SCALE})`,
+        height: `calc(${vertical ? "100cqw" : "100cqh"} / ${SEAT_SCALE})`,
+        transform: `translate(-50%, -50%) rotate(${SEAT_ROTATION[side]}deg) scale(${SEAT_SCALE})`,
+    }
+
+    return (
+        <div className="relative" style={wrapperStyle}>
+            <div
+                className={`absolute top-1/2 left-1/2 flex flex-col items-center justify-center gap-2 rounded-lg p-2 ${
+                    isTurn ? "bg-black/40 ring-4 ring-amber-300" : "bg-black/20"
+                }`}
+                style={innerStyle}
+            >
+                <span className="text-base font-semibold">
+                    {player.name} · stock {player.stockPile.length}
+                </span>
+
+                <div className="flex items-start justify-center gap-3">
+                    <Deck name="Stock" deck={player.stockPile} faceUp={true} draggable={false} />
+                    {player.discardPiles.map((pile, i) => (
+                        <Deck key={i} name={`Discard ${i + 1}`} deck={pile} faceUp={true} draggable={false} />
+                    ))}
+                </div>
+
+                {/* Last child, so after rotation the hand sits against the screen edge */}
+                <Hand
+                    faceUp={false}
+                    cards={player.hand}
+                    selectedId={null}
+                    onSelect={noop}
+                    dragDisabled
+                />
+            </div>
+        </div>
+    )
+}
+
+const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps) => {
     const {players, currentPlayer, drawPile, buildingPiles, completedPile, winner} = gameState
     const [selected, setSelected] = useState<CardSource | null>(null)
     const [draggingCard, setDraggingCard] = useState<Card | null>(null)
@@ -36,13 +99,23 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
 
     const active = players[currentPlayer]
     const isComputerTurn = active.isComputer
-    const opponents = players.filter((_, i) => i !== currentPlayer)
     const selectedCard: Card | undefined = selected ? getSourceCard(active, selected) : undefined
+
+    // "Me" is the human player, so my area stays on screen during computer turns
+    const me: Player = isComputerTurn ? (players.find((p) => !p.isComputer) ?? active) : active
+    const myIndex = players.findIndex((p) => p.id === me.id)
+
+    // Opponents in turn order, starting with whoever plays right after me
+    const opponents = [...players.slice(myIndex + 1), ...players.slice(0, myIndex)]
+
+    const seats: {left?: Player, top?: Player, right?: Player} =
+        opponents.length === 1 ? {top: opponents[0]}
+        : opponents.length === 2 ? {left: opponents[0], right: opponents[1]}
+        : {left: opponents[0], top: opponents[1], right: opponents[2]}
 
     const isSelected = (source: CardSource) => {
         if (!selected || selected.from !== source.from) return false
         if (source.from === "hand" && selected.from === "hand") return source.cardId === selected.cardId
-        if (source.from === "discard" && selected.from === "discard") return source.pile === selected.pile
         if (source.from === "discard" && selected.from === "discard") return source.pile === selected.pile
         return true
     }
@@ -77,12 +150,11 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
         return stockTop?.id === cardId ? {from: "stock"} : null
     }
 
-    
     const handleDragStart = (event: DragStartEvent) => {
         if (winner || isComputerTurn) return
         const source = findDragSource(String(event.active.id))
         const card = source ? getSourceCard(active, source) : undefined
-        if(!source || !card) return
+        if (!source || !card) return
 
         setSelected(source)
         setDraggingCard(card)
@@ -126,62 +198,74 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
             onDragEnd={handleDragEnd}
             onDragCancel={handleDragCancel}
         >
-        <div className="flex max-h-full flex-col gap-3 p-4 text-white relative">
-            <header className="absolute top-5 right-5">
+        {/* Fixed to the viewport so nothing ever scrolls */}
+        <div className="relative grid h-dvh grid-rows-[auto_minmax(0,1fr)_auto] gap-2 overflow-hidden p-2 text-white">
+            <header className="absolute top-3 right-3 z-10">
                 <Menu onNewGame={onNewGame}/>
             </header>
- 
-            {opponents.length > 0 && (
-                <section className="flex flex-wrap justify-center gap-2">
-                    {opponents.map((player) => <OpponentArea key={player.id} player={player} />)}
-                </section>
-            )}
- 
-            <section className="flex flex-wrap items-start justify-center gap-5">
-                <div className="flex flex-col items-center gap-1">
-                    <Deck name="Draw pile" deck={drawPile} faceUp={false} />
-                    <span className="text-xs text-white/70">Draw pile</span>
-                </div>
-                <div className="flex flex-wrap items-start justify-center gap-6">
-                    {buildingPiles.map((pile, i) => (
-                        <BuildingPiles
-                            key={i}
-                            name={`Build ${i + 1}`}
-                            dropId={`build-${i}`}
-                            cards={pile}
-                            onClick={() => handleBuildingClick(i)}
-                            highlight={!isComputerTurn && !!selectedCard && validatePlay(selectedCard, pile)}
-                        />
-                    ))}
-                </div>
-                <div className="flex flex-col items-center gap-1">
-                    <div className="flex h-24 w-18 items-center justify-center rounded border-2 border-dashed border-white/40 text-center text-sm text-white/60">
-                        {completedPile.length} completed
+
+            {/* Top edge */}
+            <div className="flex justify-center">
+                {seats.top && <EdgeSeat player={seats.top} side="top" isTurn={seats.top.id === active.id} />}
+            </div>
+
+            {/* Left edge | table | right edge */}
+            <div className="grid min-h-0 grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-1 gap-2">
+                {seats.left
+                    ? <EdgeSeat player={seats.left} side="left" isTurn={seats.left.id === active.id} />
+                    : <div />}
+
+                <section className="flex flex-wrap content-center items-start justify-center gap-5">
+                    <div className="flex flex-col items-center gap-1">
+                        <Deck name="Draw pile" deck={drawPile} faceUp={false} />
+                        <span className="text-xs text-white/70">Draw pile</span>
                     </div>
-                    <span className="text-xs text-white/70">Completed</span>
-                </div>
-            </section>
- 
-            <section className="mt-auto flex flex-col items-center gap-2 rounded-lg bg-black/30 p-1">
+                    <div className="flex flex-wrap items-start justify-center gap-6">
+                        {buildingPiles.map((pile, i) => (
+                            <BuildingPiles
+                                key={i}
+                                name={`Build ${i + 1}`}
+                                dropId={`build-${i}`}
+                                cards={pile}
+                                onClick={() => handleBuildingClick(i)}
+                                highlight={!isComputerTurn && !!selectedCard && validatePlay(selectedCard, pile)}
+                            />
+                        ))}
+                    </div>
+                    <div className="flex flex-col items-center gap-1">
+                        <div className="flex h-24 w-18 items-center justify-center rounded border-2 border-dashed border-white/40 text-center text-sm text-white/60">
+                            {completedPile.length} completed
+                        </div>
+                        <span className="text-xs text-white/70">Completed</span>
+                    </div>
+                </section>
+
+                {seats.right
+                    ? <EdgeSeat player={seats.right} side="right" isTurn={seats.right.id === active.id} />
+                    : <div />}
+            </div>
+
+            {/* My area: bottom edge */}
+            <section className="flex flex-col items-center gap-1 rounded-lg bg-black/30 p-1">
                 <h2 className="text-base font-semibold">
                     {active.name}'s turn{isComputerTurn && " (thinking...)"}
                 </h2>
                 {!isComputerTurn && <p className="text-sm text-white/80">{instruction}</p>}
- 
+
                 <div className="flex flex-wrap items-start justify-center gap-6">
                     <div className="flex flex-col items-center gap-1">
                         <Deck
                             name="Stock"
-                            deck={active.stockPile}
+                            deck={me.stockPile}
                             draggable={!isComputerTurn && !winner}
                             faceUp={true}
                             selected={isSelected({from: "stock"})}
                             onClick={() => toggleSelect({from: "stock"})}
                         />
-                        <span className="text-xs text-white/70">Stock ({active.stockPile.length} left)</span>
+                        <span className="text-xs text-white/70">Stock ({me.stockPile.length} left)</span>
                     </div>
- 
-                    {active.discardPiles.map((pile, i) => (
+
+                    {me.discardPiles.map((pile, i) => (
                         <div key={i} className="flex flex-col items-center gap-1">
                             <Deck
                                 name={`Discard ${i + 1}`}
@@ -197,16 +281,16 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
                         </div>
                     ))}
                 </div>
- 
+
                 <Hand
-                    faceUp={!isComputerTurn}
-                    cards={active.hand}
+                    faceUp={true}
+                    cards={me.hand}
                     selectedId={selected?.from === "hand" ? selected.cardId : null}
                     onSelect={(card) => toggleSelect({from: "hand", cardId: card.id})}
                     dragDisabled={isComputerTurn || !!winner}
                 />
             </section>
- 
+
             {winner && (
                 <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/70">
                     <SparkleEffect />
@@ -223,7 +307,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onPassTurn, onNewGame}: Ga
                     </div>
                 </div>
             )}
- 
+
             <DragOverlay>
                 {draggingCard && (
                     <div className="rotate-3 cursor-grabbing">

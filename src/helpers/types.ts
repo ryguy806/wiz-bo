@@ -30,3 +30,14 @@ export type CardSource =
     | { from: "stock" }
     | { from: "hand"; cardId: string }
     | { from: "discard"; pile: number }
+
+export type ServerToClientEvents = {
+    gameUpdate: (state: GameState) => void
+    playerJoined: (player: Player) => void
+    error: (message: string) => void
+}
+
+export type ClientToServerEvents = {
+    joinRoom: (roomId: string, playerName: string) => void
+    leaveRoom: () => void
+}
