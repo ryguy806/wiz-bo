@@ -1,5 +1,8 @@
 import { useState, type SubmitEvent } from "react"
 import { MAX_PLAYERS, MIN_PLAYERS, getStockSize } from "../../helpers/gameStateHelper"
+import Title from "../Layout/Title"
+import MagicBackground from "../MagicEffects/MagicBackgorund"
+import MistBackground from "../MagicEffects/MistBackground"
 
 type SetupScreenProps = {
     onStart: (playerNames: string[], computerCount: number) => void
@@ -35,64 +38,68 @@ const SetupScreen = ({onStart}: SetupScreenProps) => {
     }
 
     return (
-        <div className="flex min-h-screen items-center justify-center bg-olive-700 p-4">
-            <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-4 rounded-lg text-black bg-taupe-300 p-6 shadow-lg">
-                <h1 className="text-center text-4xl font-bold"><span className="text-sky-900">Wiz-Bo</span></h1>
-                <div  className="flex flex-col gap-2 border border-gray-500 p-2 rounded">
-                    <label className="flex flex-col gap-1">
-                        <span className="font-semibold">Human Players</span>
-                        <select
-                            value={humanCount}
-                            onChange={(e) => setHumanCount(parseInt(e.target.value))}
-                            className="rounded border p-2"
-                        >
-                            {range(1, MAX_PLAYERS).map((n) => (
-                                <option key={n} value={n}>{n}</option>
-                            ))}
-                        </select>
-                    </label>
+        <>
+            <MistBackground/>
+            <MagicBackground/>
+            <div className="flex min-h-screen items-center justify-center p-4">
+                <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-4 rounded-lg text-black bg-taupe-300 p-6 shadow-lg">
+                    <Title>Wiz-Bo</Title>
+                    <div  className="flex flex-col gap-2 border border-gray-500 p-2 rounded">
+                        <label className="flex flex-col gap-1">
+                            <span className="font-semibold">Human Players</span>
+                            <select
+                                value={humanCount}
+                                onChange={(e) => setHumanCount(parseInt(e.target.value))}
+                                className="rounded border p-2"
+                            >
+                                {range(1, MAX_PLAYERS).map((n) => (
+                                    <option key={n} value={n}>{n}</option>
+                                ))}
+                            </select>
+                        </label>
 
-                    <label className="flex flex-col gap-1 pb-2">
-                        <span className="font-semibold">Computer Players</span>
-                        <select
-                            value={computerCount}
-                            onChange={(e) => setComputerCount(parseInt(e.target.value))}
-                            className="rounded border p-2"
-                        >
-                            {range(minComputers, maxComputers).map((n) => (
-                                <option key={n} value={n}>{n}</option>
+                        <label className="flex flex-col gap-1 pb-2">
+                            <span className="font-semibold">Computer Players</span>
+                            <select
+                                value={computerCount}
+                                onChange={(e) => setComputerCount(parseInt(e.target.value))}
+                                className="rounded border p-2"
+                            >
+                                {range(minComputers, maxComputers).map((n) => (
+                                    <option key={n} value={n}>{n}</option>
+                                ))}
+                            </select>
+                        </label>
+                    </div>
+                    <div className="flex flex-col gap-2 border border-gray-500 p-2 rounded">
+                        <div className="font-semibold">
+                            Enter Player Names:
+                        </div>
+                        <div>
+                            {names.map((name, i) => (
+                                <label key={i} className="flex flex-col gap-1 pb-2">
+                                    <input
+                                        value={name}
+                                        onChange={(e) => setName(i, e.target.value)}
+                                        maxLength={20}
+                                        placeholder={`Player ${i}`}
+                                        defaultValue={`Player ${i}`}
+                                        className="rounded border p-2"
+                                    />
+                                </label>
                             ))}
-                        </select>
-                    </label>
-                </div>
-                <div className="flex flex-col gap-2 border border-gray-500 p-2 rounded">
-                    <div className="font-semibold">
-                        Enter Player Names:
+                        </div>
                     </div>
-                    <div className="pb-2">
-                        {names.map((name, i) => (
-                            <label key={i} className="flex flex-col gap-1">
-                                <input
-                                    value={name}
-                                    onChange={(e) => setName(i, e.target.value)}
-                                    maxLength={20}
-                                    placeholder={`Player ${i}`}
-                                    defaultValue={`Player ${i}`}
-                                    className="rounded border p-2"
-                                />
-                            </label>
-                        ))}
-                    </div>
-                </div>
 
-                <button
-                    type="submit"
-                    className="rounded bg-rose-900 py-2 font-semibold text-white hover:bg-emerald-600"
-                >
-                    New Game
-                </button>
-            </form>
-        </div>
+                    <button
+                        type="submit"
+                        className="rounded bg-rose-900 py-2 font-semibold text-white hover:bg-emerald-600"
+                    >
+                        New Game
+                    </button>
+                </form>
+            </div>
+        </>
     )
 }
 
