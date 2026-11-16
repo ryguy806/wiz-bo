@@ -79,11 +79,11 @@ const SetupScreen = ({onStart}: SetupScreenProps) => {
                             {names.map((name, i) => (
                                 <label key={i} className="flex flex-col gap-1 pb-2">
                                     <input
-                                        value={name}
+                                        alt={name}
                                         onChange={(e) => setName(i, e.target.value)}
                                         maxLength={20}
-                                        placeholder={`Player ${i}`}
-                                        defaultValue={`Player ${i}`}
+                                        placeholder={`Player ${i + 1}`}
+                                        defaultValue={`Player ${i + 1}`}
                                         className="rounded border p-2"
                                     />
                                 </label>

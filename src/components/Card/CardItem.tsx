@@ -7,9 +7,10 @@ type CardItemProps = {
     faceUp: boolean
     selected?: boolean
     onClick?: () => void
+    playerColor?: string
 }
 
-const CardItem = ({card, faceUp, selected = false, onClick}: CardItemProps) => {
+const CardItem = ({card, faceUp, selected = false, onClick, playerColor="#000"}: CardItemProps) => {
     const interactive = onClick !== undefined && faceUp
 
     return (
@@ -26,7 +27,7 @@ const CardItem = ({card, faceUp, selected = false, onClick}: CardItemProps) => {
             } : undefined}
             className={`group h-24 w-18 rounded transition-transform
                 ${interactive ? "cursor-pointer hover:-translate-y-1" : ""}
-                ${selected ? "-translate-y-3 ring-4 ring-yellow-400" : ""}`}
+                ${selected ? `-translate-y-3 ring-4 ring-[${playerColor}]` : ""}`}
         >
             <div className="relative size-full">
                 {

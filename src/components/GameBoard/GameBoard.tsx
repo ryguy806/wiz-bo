@@ -171,9 +171,9 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
                     </div>
                     <div className="flex flex-col items-center gap-1 pl-10">
                         <div className="flex h-24 w-18 items-center justify-center rounded border-2 border-dashed border-white/40 text-center text-sm text-white/60">
-                            {completedPile.length} Completed
-                        </div>
-                        <span className="text-xs text-white/70">Completed</span>
+                            <Deck name="Completed" faceUp={false} onClick={undefined} highlight={false} draggable={false} dropId={undefined} selected={undefined} deck={completedPile} displayLength={false} />
+                        </div>  
+                        <span className="text-xs text-white/70">{completedPile.length / 12} Completed</span>
                     </div>
                 </section>
 
@@ -183,18 +183,15 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
             </div>
 
             <section className="flex flex-col items-center gap-1 rounded-lg bg-black/30 p-1">
-                <h2>
-                    {active.name}
-                </h2>
-                <div className="flex flex-row relative">
-                    <div className="absolute -left-60 top-20">
-                        <h2 className="text-sm text-white/80">
+                <div className="flex flex-row relative pt-3">
+                    <div className="absolute -left-60 top-10">
+                        <p className="text-lg font-semibold text-white/80 w-50">
                             {active.name}'s Turn{isComputerTurn && " (thinking...)"}
-                        </h2>
-                        {!isComputerTurn && <p className="w-50 wrap-word">{instruction}</p>}
+                        </p>
+                        {!isComputerTurn && <p className="text-sm w-50 wrap-word">{instruction}</p>}
                     </div>
                     <div>
-                        <div className="flex flex-wrap items-start justify-center gap-6">
+                        <div className="flex flex-wrap items-start justify-center gap-6 pb-3">
                             <div className="flex flex-col items-center gap-1">
                                 <Deck
                                     name="Stock"
@@ -218,7 +215,6 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
                                         highlight={!isComputerTurn && selected?.from === "hand"}
                                         onClick={() => handleDiscardClick(i)}
                                     />
-                                    <span className="text-xs text-white/70">Discard {i + 1}</span>
                                 </div>
                             ))}
                         </div>
@@ -226,6 +222,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
                             faceUp={true}
                             cards={me.hand}
                             selectedId={selected?.from === "hand" ? selected.cardId : null}
+                        
                             onSelect={(card) => toggleSelect({from: "hand", cardId: card.id})}
                             dragDisabled={isComputerTurn || !!winner}
                         />

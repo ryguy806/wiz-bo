@@ -1,11 +1,11 @@
 export type CardValue = number | "WIZ-BO"
 
-export interface Card {
+export type Card = {
     id: string
     value: CardValue
 }
 
-export interface Player {
+export type Player = {
     id: string
     name: string
     stockPile: Card[]
@@ -14,7 +14,7 @@ export interface Player {
     isComputer: boolean
 }
 
-export interface GameState {
+export type GameState = {
     players: Player[]
     currentPlayer: number
     drawPile: Card[]

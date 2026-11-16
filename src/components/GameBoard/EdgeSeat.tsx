@@ -34,27 +34,23 @@ const EdgeSeat = ({player, side, isTurn}: EdgeSeatProps) => {
     return (
         <div className="relative" style={wrapperStyle}>
             <div
-                className={`absolute top-1/2 left-1/2 flex flex-col items-center justify-center gap-2 rounded-lg p-2 ${
+                className={`absolute top-1/2 left-1/2 flex flex-col items-center justify-center rounded-lg ${
                     isTurn ? "bg-black/40 ring-4 ring-amber-300" : "bg-black/20"
                 }`}
                 style={innerStyle}
             >
-                <span className="text-base font-semibold">
+                <span className="text-base font-semibold pt-1">
                     {player.name}
                 </span>
-
-                <div className="flex items-start justify-center gap-3">
+                <div className="flex items-start justify-center gap-2">
                     <div className="flex flex-col items-center pr-10">
                         <Deck name="Stock" deck={player.stockPile} faceUp={true} draggable={false} />
                         <p>Stock</p>
                     </div>
                     {player.discardPiles.map((pile, i) => (
                         <Deck key={i} name={`Discard ${i + 1}`} deck={pile} faceUp={true} draggable={false} />
-                    ))}
-                    
+                    ))}  
                 </div>
-
-                {/* Last child, so after rotation the hand sits against the screen edge */}
                 <Hand
                     faceUp={false}
                     cards={player.hand}

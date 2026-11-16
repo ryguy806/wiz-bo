@@ -11,11 +11,12 @@ type DeckProps = {
     faceUp: boolean
     selected?: boolean
     onClick?: () => void
-    highlight?: boolean
+    highlight?: boolean,
+    displayLength?: boolean
 }
 
 // Shows a pile as its top card plus a count badge, or an empty slot with the pile's name
-const Deck = ({draggable = false, name, dropId, deck, faceUp, selected = false, onClick, highlight = false}: DeckProps) => {
+const Deck = ({draggable = false, name, dropId, deck, faceUp, selected = false, onClick, highlight = false, displayLength = true}: DeckProps) => {
   const interactive = onClick !== undefined
   const topCard = deck[deck.length - 1]
   const {setNodeRef, isOver} = useDroppable({id: dropId ?? name, disabled: dropId === undefined})
@@ -44,7 +45,7 @@ const Deck = ({draggable = false, name, dropId, deck, faceUp, selected = false, 
                 </div>
             )
         }
-        {deck.length > 0 && (
+        {(deck.length > 0 && displayLength) && (
             <span className="pointer-events-none absolute -bottom-2 -right-2 rounded-full bg-black px-2 text-sm font-bold text-white">
                 {deck.length}
             </span>
