@@ -10,7 +10,7 @@ type CardItemProps = {
 }
 
 const CardItem = ({card, faceUp, selected = false, onClick}: CardItemProps) => {
-    const interactive = onClick !== undefined
+    const interactive = onClick !== undefined && faceUp
 
     return (
         <div

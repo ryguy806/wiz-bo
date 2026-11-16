@@ -4,16 +4,21 @@ import SetupScreen from "./components/SetupScreen/SetupScreen"
 import GameBoard from "./components/GameBoard/GameBoard"
 import MagicBackground from "./components/MagicEffects/MagicBackgorund"
 import MistBackground from "./components/MagicEffects/MistBackground"
+import { div } from "three/tsl"
 
 const App = () => {
     const { gameState, startGame, playCard, discardCard, passTurn, resetGame } = useGameState()
 
+    const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+    };
+
     if (!gameState.gameStarted) {
-        return <SetupScreen onStart={startGame} />
+        return (<div onContextMenu={handleContextMenu}><SetupScreen onStart={startGame} /></div>)
     }
 
     return (
-        <>
+        <div onContextMenu={handleContextMenu}>
             <MistBackground/>
             <MagicBackground/>
             <GameBoard
@@ -23,7 +28,7 @@ const App = () => {
                 onPassTurn={passTurn}
                 onNewGame={resetGame}
             />
-        </>
+        </div>
     )
 }
 

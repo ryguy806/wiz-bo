@@ -17,6 +17,7 @@ import {
 } from '@dnd-kit/core'
 import CardItem from "../Card/CardItem"
 import Menu from "../Layout/Menu"
+import EdgeSeat from "./EdgeSeat"
 
 type GameBoardProps = {
     gameState: GameState
@@ -24,67 +25,6 @@ type GameBoardProps = {
     onDiscard: (cardId: string, discardIndex: number) => void
     onPassTurn: () => void
     onNewGame: () => void
-}
-
-type Side = "top" | "left" | "right"
-
-// Opponent seats are laid out at normal size, then shrunk and rotated to hug an edge.
-// SEAT_SCALE shrinks the cards; SEAT_THICKNESS is how far the seat reaches in from the edge.
-const SEAT_SCALE = 0.6
-const SEAT_THICKNESS = "9rem"
-const SEAT_ROTATION: Record<Side, number> = {top: 0, left: 90, right: -90}
-
-const noop = () => {}
-
-type EdgeSeatProps = {
-    player: Player
-    side: Side
-    isTurn: boolean
-}
-
-const EdgeSeat = ({player, side, isTurn}: EdgeSeatProps) => {
-    const vertical = side !== "top"
-
-    const wrapperStyle: React.CSSProperties = vertical
-        ? {containerType: "size", width: SEAT_THICKNESS, height: "100%"}
-        : {containerType: "size", height: SEAT_THICKNESS, width: "min(100%, 48rem)"}
-
-    const innerStyle: React.CSSProperties = {
-        width: `calc(${vertical ? "100cqh" : "100cqw"} / ${SEAT_SCALE})`,
-        height: `calc(${vertical ? "100cqw" : "100cqh"} / ${SEAT_SCALE})`,
-        transform: `translate(-50%, -50%) rotate(${SEAT_ROTATION[side]}deg) scale(${SEAT_SCALE})`,
-    }
-
-    return (
-        <div className="relative" style={wrapperStyle}>
-            <div
-                className={`absolute top-1/2 left-1/2 flex flex-col items-center justify-center gap-2 rounded-lg p-2 ${
-                    isTurn ? "bg-black/40 ring-4 ring-amber-300" : "bg-black/20"
-                }`}
-                style={innerStyle}
-            >
-                <span className="text-base font-semibold">
-                    {player.name} · stock {player.stockPile.length}
-                </span>
-
-                <div className="flex items-start justify-center gap-3">
-                    <Deck name="Stock" deck={player.stockPile} faceUp={true} draggable={false} />
-                    {player.discardPiles.map((pile, i) => (
-                        <Deck key={i} name={`Discard ${i + 1}`} deck={pile} faceUp={true} draggable={false} />
-                    ))}
-                </div>
-
-                {/* Last child, so after rotation the hand sits against the screen edge */}
-                <Hand
-                    faceUp={false}
-                    cards={player.hand}
-                    selectedId={null}
-                    onSelect={noop}
-                    dragDisabled
-                />
-            </div>
-        </div>
-    )
 }
 
 const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps) => {
@@ -213,7 +153,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
                     : <div />}
 
                 <section className="flex flex-wrap content-center items-start justify-center gap-5">
-                    <div className="flex flex-col items-center gap-1">
+                    <div className="flex flex-col items-center gap-1 pr-10">
                         <Deck name="Draw pile" deck={drawPile} faceUp={false} />
                         <span className="text-xs text-white/70">Draw pile</span>
                     </div>
@@ -229,9 +169,9 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
                             />
                         ))}
                     </div>
-                    <div className="flex flex-col items-center gap-1">
+                    <div className="flex flex-col items-center gap-1 pl-10">
                         <div className="flex h-24 w-18 items-center justify-center rounded border-2 border-dashed border-white/40 text-center text-sm text-white/60">
-                            {completedPile.length} completed
+                            {completedPile.length} Completed
                         </div>
                         <span className="text-xs text-white/70">Completed</span>
                     </div>
@@ -242,50 +182,55 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
                     : <div />}
             </div>
 
-            {/* My area: bottom edge */}
             <section className="flex flex-col items-center gap-1 rounded-lg bg-black/30 p-1">
-                <h2 className="text-base font-semibold">
-                    {active.name}'s turn{isComputerTurn && " (thinking...)"}
+                <h2>
+                    {active.name}
                 </h2>
-                {!isComputerTurn && <p className="text-sm text-white/80">{instruction}</p>}
-
-                <div className="flex flex-wrap items-start justify-center gap-6">
-                    <div className="flex flex-col items-center gap-1">
-                        <Deck
-                            name="Stock"
-                            deck={me.stockPile}
-                            draggable={!isComputerTurn && !winner}
-                            faceUp={true}
-                            selected={isSelected({from: "stock"})}
-                            onClick={() => toggleSelect({from: "stock"})}
-                        />
-                        <span className="text-xs text-white/70">Stock ({me.stockPile.length} left)</span>
+                <div className="flex flex-row relative">
+                    <div className="absolute -left-60 top-20">
+                        <h2 className="text-sm text-white/80">
+                            {active.name}'s Turn{isComputerTurn && " (thinking...)"}
+                        </h2>
+                        {!isComputerTurn && <p className="w-50 wrap-word">{instruction}</p>}
                     </div>
+                    <div>
+                        <div className="flex flex-wrap items-start justify-center gap-6">
+                            <div className="flex flex-col items-center gap-1">
+                                <Deck
+                                    name="Stock"
+                                    deck={me.stockPile}
+                                    draggable={!isComputerTurn && !winner}
+                                    faceUp={true}
+                                    selected={isSelected({from: "stock"})}
+                                    onClick={() => toggleSelect({from: "stock"})}
+                                />
+                            </div>
 
-                    {me.discardPiles.map((pile, i) => (
-                        <div key={i} className="flex flex-col items-center gap-1">
-                            <Deck
-                                name={`Discard ${i + 1}`}
-                                dropId={`discard-${i}`}
-                                draggable={!isComputerTurn && !winner}
-                                deck={pile}
-                                faceUp={true}
-                                selected={isSelected({from: "discard", pile: i})}
-                                highlight={!isComputerTurn && selected?.from === "hand"}
-                                onClick={() => handleDiscardClick(i)}
-                            />
-                            <span className="text-xs text-white/70">Discard {i + 1}</span>
+                            {me.discardPiles.map((pile, i) => (
+                                <div key={i} className="flex flex-col items-center gap-1">
+                                    <Deck
+                                        name={`Discard ${i + 1}`}
+                                        dropId={`discard-${i}`}
+                                        draggable={!isComputerTurn && !winner}
+                                        deck={pile}
+                                        faceUp={true}
+                                        selected={isSelected({from: "discard", pile: i})}
+                                        highlight={!isComputerTurn && selected?.from === "hand"}
+                                        onClick={() => handleDiscardClick(i)}
+                                    />
+                                    <span className="text-xs text-white/70">Discard {i + 1}</span>
+                                </div>
+                            ))}
                         </div>
-                    ))}
+                        <Hand
+                            faceUp={true}
+                            cards={me.hand}
+                            selectedId={selected?.from === "hand" ? selected.cardId : null}
+                            onSelect={(card) => toggleSelect({from: "hand", cardId: card.id})}
+                            dragDisabled={isComputerTurn || !!winner}
+                        />
+                    </div>
                 </div>
-
-                <Hand
-                    faceUp={true}
-                    cards={me.hand}
-                    selectedId={selected?.from === "hand" ? selected.cardId : null}
-                    onSelect={(card) => toggleSelect({from: "hand", cardId: card.id})}
-                    dragDisabled={isComputerTurn || !!winner}
-                />
             </section>
 
             {winner && (

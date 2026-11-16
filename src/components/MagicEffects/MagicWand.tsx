@@ -142,7 +142,7 @@ const MagicWand = ({
         const glow = new THREE.Sprite(
             new THREE.SpriteMaterial({
                 map: sparkleTexture,
-                color: 0xffe08a,
+                color: 0x580088,
                 blending: THREE.AdditiveBlending,
                 depthWrite: false,
                 transparent: true,
