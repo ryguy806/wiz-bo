@@ -4,7 +4,6 @@ import SetupScreen from "./components/SetupScreen/SetupScreen"
 import GameBoard from "./components/GameBoard/GameBoard"
 import MagicBackground from "./components/MagicEffects/MagicBackgorund"
 import MistBackground from "./components/MagicEffects/MistBackground"
-import { div } from "three/tsl"
 
 const App = () => {
     const { gameState, startGame, playCard, discardCard, passTurn, resetGame } = useGameState()

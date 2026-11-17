@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import type { Card, CardSource, GameState, Player } from "../../helpers/types"
 import { getSourceCard, validatePlay } from "../../helpers/gameStateHelper"
 import Deck from "../Deck/Deck"
@@ -18,6 +18,7 @@ import {
 import CardItem from "../Card/CardItem"
 import Menu from "../Layout/Menu"
 import EdgeSeat from "./EdgeSeat"
+import { DEFAULT_COLORS } from "../MagicEffects/MagicWand"
 
 type GameBoardProps = {
     gameState: GameState
@@ -31,12 +32,15 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
     const {players, currentPlayer, drawPile, buildingPiles, completedPile, winner} = gameState
     const [selected, setSelected] = useState<CardSource | null>(null)
     const [draggingCard, setDraggingCard] = useState<Card | null>(null)
+    const [color, setColor] = useState(DEFAULT_COLORS[currentPlayer])
 
     const sensors = useSensors(useSensor(PointerSensor, {activationConstraint: {distance: 8}}))
 
     const active = players[currentPlayer]
     const isComputerTurn = active.isComputer
     const selectedCard: Card | undefined = selected ? getSourceCard(active, selected) : undefined
+
+    useEffect(()=> {setColor(DEFAULT_COLORS[currentPlayer])}, [currentPlayer])
 
     // "Me" is the human player, so my area stays on screen during computer turns
     const me: Player = isComputerTurn ? (players.find((p) => !p.isComputer) ?? active) : active
@@ -57,7 +61,6 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
         return true
     }
 
-    // Clicking the already-selected card puts it back down. Ignored on the computer's turn
     const toggleSelect = (source: CardSource) => {
         if (isComputerTurn) return
         setSelected(isSelected(source) ? null : source)
@@ -166,6 +169,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
                                 cards={pile}
                                 onClick={() => handleBuildingClick(i)}
                                 highlight={!isComputerTurn && !!selectedCard && validatePlay(selectedCard, pile)}
+                                color={color}
                             />
                         ))}
                     </div>
@@ -200,6 +204,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
                                     faceUp={true}
                                     selected={isSelected({from: "stock"})}
                                     onClick={() => toggleSelect({from: "stock"})}
+                                    color={color}
                                 />
                             </div>
 
@@ -214,6 +219,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
                                         selected={isSelected({from: "discard", pile: i})}
                                         highlight={!isComputerTurn && selected?.from === "hand"}
                                         onClick={() => handleDiscardClick(i)}
+                                        color={color}
                                     />
                                 </div>
                             ))}
@@ -235,7 +241,6 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
                     <SparkleEffect />
                     <div className="flex flex-col items-center gap-2 rounded-lg bg-white p-8 text-black">
                         <h2 className="text-3xl font-bold text-black!">{winner} wins!</h2>
-                        <p>They emptied their stock pile first.</p>
                         <button
                             type="button"
                             onClick={onNewGame}

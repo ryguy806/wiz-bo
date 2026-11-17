@@ -12,29 +12,35 @@ type DeckProps = {
     selected?: boolean
     onClick?: () => void
     highlight?: boolean,
-    displayLength?: boolean
+    displayLength?: boolean,
+    color?: string
 }
 
 // Shows a pile as its top card plus a count badge, or an empty slot with the pile's name
-const Deck = ({draggable = false, name, dropId, deck, faceUp, selected = false, onClick, highlight = false, displayLength = true}: DeckProps) => {
+const Deck = ({draggable = false, name, dropId, deck, faceUp, selected = false, onClick, highlight = false, displayLength = true, color}: DeckProps) => {
   const interactive = onClick !== undefined
   const topCard = deck[deck.length - 1]
   const {setNodeRef, isOver} = useDroppable({id: dropId ?? name, disabled: dropId === undefined})
 
   return (
-    <div id={name} ref={setNodeRef} className={`relative h-24 w-18 rounded transition-shadow ${isOver ? "ring-4 ring-yellow-500" : ""}`}>
+    <div
+     id={name} 
+     ref={setNodeRef}
+     style={{ "--player-color": color } as React.CSSProperties} 
+     className={`relative h-24 w-18 rounded transition-shadow ${isOver ? "ring-4 ring-[color:var(--player-color)]" : ""}`}
+    >
         {
             !topCard ? (
                 <div
                     onClick={onClick}
+                    style={highlight ? { borderColor: color, color, backgroundColor: `${color}33` } : undefined}
                     className={`flex size-full items-center justify-center rounded border-2 border-dashed p-1 text-center text-sm
-                        ${highlight ? "border-yellow-400 bg-yellow-400/20 text-yellow-300" : "border-white/40 text-white/60"}
                         ${interactive ? "cursor-pointer" : ""}`}
                 >
                     {name}
                 </div>
             ) : (
-                <div className={`rounded ${highlight ? "ring-4 ring-yellow-400/70" : ""}`}>
+                <div className={`rounded ${highlight ? "ring-4 ring-[color:var(--player-color)]" : ""}`}>
                     {
                         draggable ? (
                             <DraggableCard card={topCard} faceUp={faceUp} selected={selected} onClick={onClick} />

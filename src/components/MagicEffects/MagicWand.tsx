@@ -13,7 +13,7 @@ type MagicWandProps = {
     className?: string
 }
 
-export const DEFAULT_COLORS = ["#cb0909", "#ffc31f", "#f016c4", "#1e98f6"]
+export const DEFAULT_COLORS = ["#cb0909", "#ffc31f", "#0ae93e", "#1e98f6"]
 const MAX_PARTICLES = 360
 
 const VERT = `
