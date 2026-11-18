@@ -19,6 +19,8 @@ import CardItem from "../Card/CardItem"
 import Menu from "../Layout/Menu"
 import EdgeSeat from "./EdgeSeat"
 import { DEFAULT_COLORS } from "../MagicEffects/MagicWand"
+import GameWin from "./GameWin"
+import PlayerArea from "../Players/PlayerArea"
 
 type GameBoardProps = {
     gameState: GameState
@@ -54,32 +56,12 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
         : opponents.length === 2 ? {left: opponents[0], right: opponents[1]}
         : {left: opponents[0], top: opponents[1], right: opponents[2]}
 
-    const isSelected = (source: CardSource) => {
-        if (!selected || selected.from !== source.from) return false
-        if (source.from === "hand" && selected.from === "hand") return source.cardId === selected.cardId
-        if (source.from === "discard" && selected.from === "discard") return source.pile === selected.pile
-        return true
-    }
-
-    const toggleSelect = (source: CardSource) => {
-        if (isComputerTurn) return
-        setSelected(isSelected(source) ? null : source)
-    }
+    
 
     const handleBuildingClick = (index: number) => {
         if (!selected || winner || isComputerTurn) return
         onPlayCard(selected, index)
         setSelected(null)
-    }
-
-    const handleDiscardClick = (index: number) => {
-        if (winner || isComputerTurn) return
-        if (selected?.from === "hand") {
-            onDiscard(selected.cardId, index)
-            setSelected(null)
-        } else if (active.discardPiles[index].length > 0) {
-            toggleSelect({from: "discard", pile: index})
-        }
     }
 
     const findDragSource = (cardId: string): CardSource | null => {
@@ -187,69 +169,20 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
             </div>
 
             <section className="flex flex-col items-center gap-1 rounded-lg bg-black/30 p-1">
-                <div className="flex flex-row relative pt-3">
-                    <div className="absolute -left-60 top-10">
-                        <p className="text-lg font-semibold text-white/80 w-50">
-                            {active.name}'s Turn{isComputerTurn && " (thinking...)"}
-                        </p>
-                        {!isComputerTurn && <p className="text-sm w-50 wrap-word">{instruction}</p>}
-                    </div>
-                    <div>
-                        <div className="flex flex-wrap items-start justify-center gap-6 pb-3">
-                            <div className="flex flex-col items-center gap-1">
-                                <Deck
-                                    name="Stock"
-                                    deck={me.stockPile}
-                                    draggable={!isComputerTurn && !winner}
-                                    faceUp={true}
-                                    selected={isSelected({from: "stock"})}
-                                    onClick={() => toggleSelect({from: "stock"})}
-                                    color={color}
-                                />
-                            </div>
-
-                            {me.discardPiles.map((pile, i) => (
-                                <div key={i} className="flex flex-col items-center gap-1">
-                                    <Deck
-                                        name={`Discard ${i + 1}`}
-                                        dropId={`discard-${i}`}
-                                        draggable={!isComputerTurn && !winner}
-                                        deck={pile}
-                                        faceUp={true}
-                                        selected={isSelected({from: "discard", pile: i})}
-                                        highlight={!isComputerTurn && selected?.from === "hand"}
-                                        onClick={() => handleDiscardClick(i)}
-                                        color={color}
-                                    />
-                                </div>
-                            ))}
-                        </div>
-                        <Hand
-                            faceUp={true}
-                            cards={me.hand}
-                            selectedId={selected?.from === "hand" ? selected.cardId : null}
-                        
-                            onSelect={(card) => toggleSelect({from: "hand", cardId: card.id})}
-                            dragDisabled={isComputerTurn || !!winner}
-                        />
-                    </div>
-                </div>
+                <PlayerArea 
+                    active={active} 
+                    me={me}
+                    isComputerTurn={isComputerTurn}
+                    instruction={instruction}
+                    winner={winner} color={color}
+                    selected={selected}
+                    setSelected={setSelected}
+                    onDiscard={onDiscard}
+                />
             </section>
 
             {winner && (
-                <div className="fixed inset-0 z-10 flex items-center justify-center bg-black/70">
-                    <SparkleEffect />
-                    <div className="flex flex-col items-center gap-2 rounded-lg bg-white p-8 text-black">
-                        <h2 className="text-3xl font-bold text-black!">{winner} wins!</h2>
-                        <button
-                            type="button"
-                            onClick={onNewGame}
-                            className="rounded bg-emerald-700 px-4 py-2 font-semibold text-white hover:bg-emerald-600"
-                        >
-                            Play again
-                        </button>
-                    </div>
-                </div>
+                <GameWin winner={winner} onNewGame={onNewGame} />
             )}
 
             <DragOverlay>
