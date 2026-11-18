@@ -4,6 +4,12 @@
   font-style: normal;
 }
 
+.noto-sans-runic-regular {
+  font-family: "Noto Sans Runic", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;

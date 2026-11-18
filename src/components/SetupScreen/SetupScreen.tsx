@@ -3,6 +3,7 @@ import { MAX_PLAYERS, MIN_PLAYERS, getStockSize } from "../../helpers/gameStateH
 import Title from "../Layout/Title"
 import MagicBackground from "../MagicEffects/MagicBackgorund"
 import MistBackground from "../MagicEffects/MistBackground"
+import RunicBorder from "../Layout/RuneBorder"
 
 type SetupScreenProps = {
     onStart: (playerNames: string[], computerCount: number) => void
@@ -41,8 +42,9 @@ const SetupScreen = ({onStart}: SetupScreenProps) => {
         <>
             <MistBackground/>
             <MagicBackground/>
-            <div className="flex min-h-screen items-center justify-center p-4">
+            <div className="flex min-h-screen items-center justify-center p-10">
                 <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-4 rounded-lg text-black bg-taupe-300 p-6 shadow-lg">
+                    <RunicBorder text="ᛏᚺᛁᛊ ᚷᚨᛗᛖ ᛁᛊ ᛃᚢᛊᛏ ᛊᚲᛁᛈᛒᛟ ᛒᚢᛏ ᚹᛁᚦ ᚹᛁᛉᚨᚱᛞᛊ" />
                     <Title>Wiz-Bo</Title>
                     <div  className="flex flex-col gap-2 border border-gray-500 p-2 rounded">
                         <label className="flex flex-col gap-1">
