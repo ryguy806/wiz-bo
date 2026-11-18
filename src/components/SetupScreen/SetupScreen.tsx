@@ -1,9 +1,8 @@
 import { useState, type SubmitEvent } from "react"
 import { MAX_PLAYERS, MIN_PLAYERS } from "../../helpers/gameStateHelper"
 import Title from "../Layout/Title"
-import MagicBackground from "../MagicEffects/MagicBackgorund"
-import MistBackground from "../MagicEffects/MistBackground"
 import RunicBorder from "../Layout/RuneBorder"
+import Background from "../Layout/Background"
 
 type SetupScreenProps = {
     onStart: (playerNames: string[], computerCount: number) => void
@@ -39,8 +38,7 @@ const SetupScreen = ({onStart}: SetupScreenProps) => {
 
     return (
         <>
-            <MistBackground/>
-            <MagicBackground/>
+            <Background/>
             <div className="flex min-h-screen items-center justify-center p-10">
                 <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-4 rounded-lg text-black bg-taupe-300 p-6 shadow-lg">
                     <RunicBorder text="ᛏᚺᛁᛊ ᚷᚨᛗᛖ ᛁᛊ ᛃᚢᛊᛏ ᛊᚲᛁᛈᛒᛟ ᛒᚢᛏ ᚹᛁᚦ ᚹᛁᛉᚨᚱᛞᛊ" />
