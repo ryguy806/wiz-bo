@@ -1,5 +1,5 @@
 import { useState, type SubmitEvent } from "react"
-import { MAX_PLAYERS, MIN_PLAYERS, getStockSize } from "../../helpers/gameStateHelper"
+import { MAX_PLAYERS, MIN_PLAYERS } from "../../helpers/gameStateHelper"
 import Title from "../Layout/Title"
 import MagicBackground from "../MagicEffects/MagicBackgorund"
 import MistBackground from "../MagicEffects/MistBackground"
@@ -16,7 +16,6 @@ const SetupScreen = ({onStart}: SetupScreenProps) => {
     const [computerCount, setComputerCount] = useState(0)
 
     const humanCount = names.length
-    const totalPlayers = humanCount + computerCount
 
     const minComputers = Math.max(0, MIN_PLAYERS - humanCount)
     const maxComputers = MAX_PLAYERS - humanCount
