@@ -3,8 +3,6 @@ import type { Card, CardSource, GameState, Player } from "../../helpers/types"
 import { getSourceCard, validatePlay } from "../../helpers/gameStateHelper"
 import Deck from "../Deck/Deck"
 import BuildingPiles from "../Deck/BuildingPiles"
-import Hand from "../Hand/Hand"
-import SparkleEffect from "../MagicEffects/SparkleEffect"
 import {
     DndContext,
     DragOverlay,
