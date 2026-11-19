@@ -137,8 +137,8 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
 
                 <section className="flex flex-wrap content-center items-start justify-center gap-5">
                     <div className="flex flex-col items-center gap-1 pr-10">
-                        <Deck name="Draw pile" deck={drawPile} faceUp={false} />
-                        <span className="text-xs text-white/70">Draw pile</span>
+                        <Deck name="Draw Pile" deck={drawPile} faceUp={false} />
+                        <span className="text-xs text-white/70">Draw Pile</span>
                     </div>
                     <div className="flex flex-wrap items-start justify-center gap-6">
                         {buildingPiles.map((pile, i) => (
@@ -152,12 +152,6 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
                                 color={color}
                             />
                         ))}
-                    </div>
-                    <div className="flex flex-col items-center gap-1 pl-10">
-                        <div className="flex h-24 w-18 items-center justify-center rounded border-2 border-dashed border-white/40 text-center text-sm text-white/60">
-                            <Deck name="Completed" faceUp={false} onClick={undefined} highlight={false} draggable={false} dropId={undefined} selected={undefined} deck={completedPile} displayLength={false} />
-                        </div>  
-                        <span className="text-xs text-white/70">{completedPile.length / 12} Completed</span>
                     </div>
                 </section>
 

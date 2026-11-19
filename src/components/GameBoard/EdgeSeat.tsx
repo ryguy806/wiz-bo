@@ -31,7 +31,6 @@ const EdgeSeat = ({player, side, isTurn, color}: EdgeSeatProps) => {
         height: `calc(${vertical ? "100cqw" : "100cqh"} / ${SEAT_SCALE})`,
         transform: `translate(-50%, -50%) rotate(${SEAT_ROTATION[side]}deg) scale(${SEAT_SCALE})`,
         "--player-color": color,
-        paddingBottom: vertical ? "36px" : ""
     }
 
     return (
