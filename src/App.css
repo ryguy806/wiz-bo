@@ -6,11 +6,15 @@
 }
 
 @theme {
-  --animate-wiz-cycle: wiz-cycle 2.4s linear infinite;
+  --animate-wiz-dance: wiz-cycle 2.4s linear infinite, wiz-bob 1.2s ease-in-out infinite;
   @keyframes wiz-cycle {
-    0%, 100% { color: #cb0909; }
-    25% { color: #ffc31f; }
-    50% { color: #0ae93e; }
-    75% { color: #1e98f6; }
+    0%, 100% { color: #ff3d81; }
+    25% { color: #ffd60a; }
+    50% { color: #00e5ff; }
+    75% { color: #7cff4d; }
+  }
+  @keyframes wiz-bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-0.3em); }
   }
 }

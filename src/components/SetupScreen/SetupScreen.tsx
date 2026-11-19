@@ -1,5 +1,5 @@
 import { useState, type SubmitEvent } from "react"
-import { MAX_PLAYERS, MIN_PLAYERS } from "../../helpers/gameStateHelper"
+import { MIN_PLAYERS } from "../../helpers/gameStateHelper"
 import Title from "../Layout/Title"
 import RunicBorder from "../Layout/RuneBorder"
 import Background from "../Layout/Background"
@@ -21,15 +21,6 @@ const SetupScreen = ({onStart}: SetupScreenProps) => {
 
     const setName = (index: number, value: string) =>
         setNames((prev) => prev.map((n, i) => (i === index ? value : n)))
-
-    const setHumanCount = (count: number) => {
-        setNames((prev) =>
-            count > prev.length
-                ? [...prev, ...Array.from({length: count - prev.length}, (_, i) => `Player ${prev.length + i + 1}`)]
-                 : prev.slice(0, count
-        ))
-        setComputerCount((prev) => Math.min(Math.max(prev, Math.max(0, MIN_PLAYERS - count)), MAX_PLAYERS - count))
-    }
 
     const handleSubmit = (e: SubmitEvent) => {
         e.preventDefault()
