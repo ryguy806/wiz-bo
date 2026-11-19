@@ -4,3 +4,13 @@
   --font-manufacturing: "Manufacturing Consent", serif;
   --font-runic: "Noto Sans Runic", sans-serif;
 }
+
+@theme {
+  --animate-wiz-cycle: wiz-cycle 2.4s linear infinite;
+  @keyframes wiz-cycle {
+    0%, 100% { color: #cb0909; }
+    25% { color: #ffc31f; }
+    50% { color: #0ae93e; }
+    75% { color: #1e98f6; }
+  }
+}

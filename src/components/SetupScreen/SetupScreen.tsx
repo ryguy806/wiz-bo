@@ -11,13 +11,13 @@ type SetupScreenProps = {
 const range = (from: number, to: number) => Array.from({length: Math.max(to - from + 1, 0)}, (_, i) => from + i)
 
 const SetupScreen = ({onStart}: SetupScreenProps) => {
-    const [names, setNames] = useState<string[]>(["Player 1", "Player 2"])
-    const [computerCount, setComputerCount] = useState(0)
+    const [names, setNames] = useState<string[]>(["Player 1"])
+    const [computerCount, setComputerCount] = useState(1)
 
     const humanCount = names.length
 
-    const minComputers = Math.max(0, MIN_PLAYERS - humanCount)
-    const maxComputers = MAX_PLAYERS - humanCount
+    const minComputers = Math.max(1, MIN_PLAYERS - humanCount)
+    const maxComputers = 3
 
     const setName = (index: number, value: string) =>
         setNames((prev) => prev.map((n, i) => (i === index ? value : n)))
@@ -40,39 +40,12 @@ const SetupScreen = ({onStart}: SetupScreenProps) => {
         <>
             <Background/>
             <div className="flex min-h-screen items-center justify-center p-10">
-                <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-4 rounded-lg text-black bg-taupe-300 p-6 shadow-lg">
+                <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-4 rounded-lg text-black bg-[#e8d8bd] p-6 shadow-lg">
                     <RunicBorder text="ᛏᚺᛁᛊ ᚷᚨᛗᛖ ᛁᛊ ᛃᚢᛊᛏ ᛊᚲᛁᛈᛒᛟ ᛒᚢᛏ ᚹᛁᚦ ᚹᛁᛉᚨᚱᛞᛊ" />
-                    <Title>Wiz-Bo</Title>
-                    <div  className="flex flex-col gap-2 border border-gray-500 p-2 rounded">
-                        <label className="flex flex-col gap-1">
-                            <span className="font-semibold">Human Players</span>
-                            <select
-                                value={humanCount}
-                                onChange={(e) => setHumanCount(parseInt(e.target.value))}
-                                className="rounded border p-2"
-                            >
-                                {range(1, MAX_PLAYERS).map((n) => (
-                                    <option key={n} value={n}>{n}</option>
-                                ))}
-                            </select>
-                        </label>
-
-                        <label className="flex flex-col gap-1 pb-2">
-                            <span className="font-semibold">Computer Players</span>
-                            <select
-                                value={computerCount}
-                                onChange={(e) => setComputerCount(parseInt(e.target.value))}
-                                className="rounded border p-2"
-                            >
-                                {range(minComputers, maxComputers).map((n) => (
-                                    <option key={n} value={n}>{n}</option>
-                                ))}
-                            </select>
-                        </label>
-                    </div>
+                    <Title title="Wiz-Bo"/>
                     <div className="flex flex-col gap-2 border border-gray-500 p-2 rounded">
                         <div className="font-semibold">
-                            Enter Player Names:
+                            Enter Player Name:
                         </div>
                         <div>
                             {names.map((name, i) => (
@@ -88,6 +61,20 @@ const SetupScreen = ({onStart}: SetupScreenProps) => {
                                 </label>
                             ))}
                         </div>
+                    </div>
+                    <div  className="flex flex-col gap-2 border border-gray-500 p-2 rounded">
+                        <label className="flex flex-col gap-1 pb-2">
+                            <span className="font-semibold">Computer Players</span>
+                            <select
+                                value={computerCount}
+                                onChange={(e) => setComputerCount(parseInt(e.target.value))}
+                                className="rounded border p-2"
+                            >
+                                {range(minComputers, maxComputers).map((n) => (
+                                    <option key={n} value={n}>{n}</option>
+                                ))}
+                            </select>
+                        </label>
                     </div>
 
                     <button

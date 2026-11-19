@@ -56,25 +56,6 @@ export const validatePlay = (card: Card, target: Card[]): boolean => {
 // The number a building pile needs next (its top card may be a Wiz-Bo standing in for a number)
 export const getNextNeeded = (pile: Card[]): number => pile.length + 1
 
-export const getTextColor = (number: number): string => {
-    switch (number) {
-        case 4:
-        case 5:
-        case 6:
-            return "text-blue-500"
-        case 7:
-        case 8:
-        case 9:
-            return "text-purple-500"
-        case 10:
-        case 11:
-        case 12:
-            return "text-green-500"
-        default:
-            return "text-red-500"
-    }
-}
-
 export const getTextIcon = (number: number): string => {
     switch (number) {
         case 4:
