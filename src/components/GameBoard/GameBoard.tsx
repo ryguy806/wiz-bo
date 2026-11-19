@@ -29,7 +29,7 @@ type GameBoardProps = {
 }
 
 const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps) => {
-    const {players, currentPlayer, drawPile, buildingPiles, completedPile, winner} = gameState
+    const {players, currentPlayer, drawPile, buildingPiles, winner} = gameState
     const [selected, setSelected] = useState<CardSource | null>(null)
     const [draggingCard, setDraggingCard] = useState<Card | null>(null)
     const [color, setColor] = useState(DEFAULT_COLORS[currentPlayer])
