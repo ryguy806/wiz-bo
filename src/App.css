@@ -6,7 +6,7 @@
 }
 
 @theme {
-  --animate-wiz-dance: wiz-cycle 3.0s linear infinite, wiz-bob 2.2s ease-in-out infinite;
+  --animate-wiz-dance: wiz-cycle 3.0s linear infinite, wiz-bob 4.2s ease-in-out infinite;
   @keyframes wiz-cycle {
     0%, 100% { color: #ff3d81; }
     25% { color: #ffd60a; }
