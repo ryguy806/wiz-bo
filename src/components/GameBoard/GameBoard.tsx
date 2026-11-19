@@ -128,13 +128,13 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
 
             {/* Top edge */}
             <div className="flex justify-center">
-                {seats.top && <EdgeSeat player={seats.top} side="top" isTurn={seats.top.id === active.id} />}
+                {seats.top && <EdgeSeat player={seats.top} side="top" isTurn={seats.top.id === active.id} color={color} />}
             </div>
 
             {/* Left edge | table | right edge */}
             <div className="grid min-h-0 grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-1 gap-2">
                 {seats.left
-                    ? <EdgeSeat player={seats.left} side="left" isTurn={seats.left.id === active.id} />
+                    ? <EdgeSeat player={seats.left} side="left" isTurn={seats.left.id === active.id} color={color} />
                     : <div />}
 
                 <section className="flex flex-wrap content-center items-start justify-center gap-5">
@@ -164,7 +164,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
                 </section>
 
                 {seats.right
-                    ? <EdgeSeat player={seats.right} side="right" isTurn={seats.right.id === active.id} />
+                    ? <EdgeSeat player={seats.right} side="right" isTurn={seats.right.id === active.id} color={color} />
                     : <div />}
             </div>
 

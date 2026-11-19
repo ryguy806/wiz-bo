@@ -41,7 +41,7 @@ const PlayerArea = ({active, me, isComputerTurn, instruction, winner, color, sel
     return (
         <div className="flex flex-row relative pt-3">
             <div className="absolute -left-60 top-10">
-                <p className="text-lg font-semibold text-white/80 w-50">
+                <p className="text-2xl font-semibold wrap-word w-50" style={{color: color}}>
                     {active.name}'s Turn{isComputerTurn && " (thinking...)"}
                 </p>
                 {!isComputerTurn && <p className="text-sm w-50 wrap-word">{instruction}</p>}
