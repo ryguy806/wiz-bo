@@ -1,4 +1,4 @@
-const DURATION = 5.4; // seconds, keep in sync with the config
+const DURATION = 3.0; // seconds, keep in sync with the config
 const STAGGER = 0.1; // seconds of lag between adjacent letters
 
 type TitleTextProps = { className?: string, text: string }
