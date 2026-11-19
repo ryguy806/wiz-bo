@@ -24,23 +24,27 @@ const MagicBackground = ({count = 1500}: BackgroundProps) => {
 
         const positions = new Float32Array(count * 3)
         const velocities = new Float32Array(count)
+        const colors = new Float32Array(count * 3);
+        const color = new THREE.Color();
         for (let i = 0; i < count; i++) {
             positions[i * 3] = (Math.random() - 0.5) * 120
             positions[i * 3 + 1] = (Math.random() - 0.5) * 80
             positions[i * 3 + 2] = (Math.random() - 0.5) * 60
             velocities[i] = 0.01 * Math.random() * 0.03
+
+            color.setHSL(Math.random(), 0.8, 0.6);
+            colors[i * 3] = color.r;
+            colors[i * 3 + 1] = color.g;
+            colors[i * 3 + 2] = color.b;
         }
 
         const geometry = new THREE.BufferGeometry()
         geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3))
+        geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3))
 
         const material = new THREE.PointsMaterial({
-            color: 0x88ccff,
+            vertexColors: true,
             size: 0.35,
-            transparent: true,
-            opacity: 0.8,
-            depthWrite: false,
-            blending: THREE.AdditiveBlending
         })
 
         const points = new THREE.Points(geometry, material)
