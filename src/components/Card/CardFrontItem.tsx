@@ -13,20 +13,21 @@ const CardFrontItem = ({id, value}: Card) => {
                 {!(value === 'WIZ-BO') ? (
                     <>
                          <div className="absolute top-1 left-1.5 flex flex-col items-center font-bold leading-none">
-                            <span className="text-sm">{value}</span>
-                            <span className="text-xs">{icon}</span>
+                            <span className="text-xs">{value}</span>
                         </div>
                         <div className="absolute bottom-1 right-1.5 flex rotate-180 flex-col items-center font-bold leading-none">
-                            <span className="text-sm">{value}</span>
-                            <span className="text-xs">{icon}</span>
+                            <span className="text-xs">{value}</span>
                         </div>
 
                                 <span
                                     role="img"
                                     aria-label="icon"
-                                    className={`absolute top-6 text-4xl`}
+                                    className="absolute top-5 text-5xl"
                                 >
                                     {icon}
+                                </span>
+                                <span role="contentinfo" aria-label={value.toString()} className="absolute top-6 text-4xl text--500">
+                                    {value}
                                 </span>
                     </>
                 ) : (
