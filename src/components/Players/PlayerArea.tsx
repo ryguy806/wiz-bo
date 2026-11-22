@@ -44,7 +44,7 @@ const PlayerArea = ({active, me, isComputerTurn, instruction, winner, color, sel
                             <DiscardPile 
                                 active={active}
                                 pile={pile}
-                                isComputerTurn
+                                isComputerTurn={isComputerTurn}
                                 winner={winner}
                                 pileNumber={i}
                                 selected={selected}
