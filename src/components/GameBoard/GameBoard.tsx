@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import type { Card, CardSource, GameState, Player } from "../../helpers/types"
-import { getSourceCard, validatePlay } from "../../helpers/gameStateHelper"
+import { getSourceCard, isDrawing, validatePlay } from "../../helpers/gameStateHelper"
 import Deck from "../Deck/Deck"
 import BuildingPiles from "../Deck/BuildingPiles"
 import {
@@ -104,6 +104,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
     }
 
     let instruction = "Select a card to play or discard."
+    if(isDrawing(gameState)) instruction = "Drawing up to 5"
     if (selectedCard) {
         instruction = selected?.from === "hand"
             ? "Click a building pile to play it, or one of your discard piles to discard it and end your turn."
@@ -160,7 +161,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
                     : <div />}
             </div>
 
-            <section className="flex flex-col items-center gap-1 rounded-lg bg-black/30 p-1">
+            <section className={`flex flex-col items-center gap-1 rounded-lg bg-black/30 p-1 ${!isComputerTurn ? "ring-4 ring-[color:var(--player-color)]" : ""}`} style={{"--player-color": color} as React.CSSProperties}>
                 <PlayerArea 
                     active={active} 
                     me={me}

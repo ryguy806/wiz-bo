@@ -41,7 +41,7 @@ const EdgeSeat = ({player, side, isTurn, color}: EdgeSeatProps) => {
                 }`}
                 style={innerStyle}
             >
-                <span className="text-base font-semibold pt-1">
+                <span className="text-base font-semibold pb-3">
                     {player.name}
                 </span>
                 <div className="flex items-start justify-center gap-2">
