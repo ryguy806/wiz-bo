@@ -110,11 +110,33 @@ export const refillHand = (state: GameState): GameState => {
 export const createInitialState = (): GameState => ({
     players: [],
     currentPlayer: 0,
+    pendingDraws: 0,
     drawPile: [],
     buildingPiles: [],
     completedPile: [],
     gameStarted: false,
     winner: null,
+})
+
+export const drawSingleCard = (state: GameState): GameState => {
+    if(state.pendingDraws <= 0) return state
+
+    const {drawPile, completedPile, drawn} = drawCards(state.drawPile, state.completedPile, 1)
+
+    return {
+        ...state,
+        drawPile,
+        completedPile,
+        pendingDraws: drawn.length === 0 ? 0 : state.pendingDraws - 1,
+        players: updateCurrentPlayer(state, (p) => ({...p, hand: [...p.hand, ...drawn]}))
+    }
+}
+
+export const isDrawing = (state: GameState): boolean => state.pendingDraws > 0
+
+const queueRefill = (state: GameState): GameState => ({
+    ...state,
+    pendingDraws: Math.max(0, HAND_SIZE - state.players[state.currentPlayer].hand.length)
 })
 
 export const createNewGame = (humanNames: string[], computerCount: number = 0): GameState => {
@@ -135,9 +157,10 @@ export const createNewGame = (humanNames: string[], computerCount: number = 0): 
         isComputer: i >= humanNames.length,
     }))
 
-    return refillHand({
+    return queueRefill({
         players,
         currentPlayer: 0,
+        pendingDraws: 0,
         drawPile: deck,
         buildingPiles: Array.from({ length: BUILDING_PILE_COUNT }, () => [] as Card[]),
         completedPile: [],
@@ -203,7 +226,7 @@ export const playCard = (state: GameState, source: CardSource, buildingIndex: nu
 
     // Played all 5 cards from the hand: draw 5 more and keep going
     if (updatedPlayer.hand.length === 0) {
-        next = refillHand(next)
+        next = queueRefill(next)
     }
 
     return next
@@ -211,11 +234,11 @@ export const playCard = (state: GameState, source: CardSource, buildingIndex: nu
 
 // Moves play to the next player, who draws back up to 5 cards
 const advanceTurn = (state: GameState): GameState =>
-    refillHand({ ...state, currentPlayer: (state.currentPlayer + 1) % state.players.length })
+    queueRefill({ ...state, currentPlayer: (state.currentPlayer + 1) % state.players.length })
 
 // Discarding a card from the hand ends the turn
 export const discardCard = (state: GameState, cardId: string, discardIndex: number): GameState => {
-    if (state.winner || !state.gameStarted) return state
+    if (state.winner || !state.gameStarted || isDrawing(state)) return state
 
     const player = state.players[state.currentPlayer]
     const card = player.hand.find((c) => c.id === cardId)
@@ -235,7 +258,7 @@ export const discardCard = (state: GameState, cardId: string, discardIndex: numb
 
 // Rare fallback: the draw pile is exhausted and the hand is empty, so there is nothing to discard
 export const canPassTurn = (state: GameState): boolean => {
-    if (state.winner || !state.gameStarted) return false
+    if (state.winner || !state.gameStarted || isDrawing(state)) return false
     return state.players[state.currentPlayer].hand.length === 0
 }
 

@@ -17,6 +17,7 @@ export type Player = {
 export type GameState = {
     players: Player[]
     currentPlayer: number
+    pendingDraws: number
     drawPile: Card[]
     buildingPiles: Card[][]
     // Finished (1-12) building piles, reshuffled into the draw pile when it runs out

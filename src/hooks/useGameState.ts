@@ -4,6 +4,8 @@ import {
     createInitialState,
     createNewGame,
     discardCard as discardCardLogic,
+    drawSingleCard,
+    isDrawing,
     passTurn as passTurnLogic,
     playCard as playCardLogic,
 } from "../helpers/gameStateHelper"
@@ -11,6 +13,7 @@ import { getComputerMove } from "../helpers/computerPlayer"
 
 export const useGameState = () => {
     const [gameState, setGameState] = useState<GameState>(createInitialState)
+
     useEffect(() => {
         if (!gameState.gameStarted || gameState.winner) return
         if (!gameState.players[gameState.currentPlayer].isComputer) return
@@ -22,6 +25,14 @@ export const useGameState = () => {
             else passTurn()
         }, 800)
 
+        return () => {
+            clearTimeout(timer)
+        }
+    }, [gameState])
+
+    useEffect(() => {
+        if (!isDrawing(gameState)) return
+        const timer = setTimeout(() => setGameState(drawSingleCard), 300) // ms between cards
         return () => clearTimeout(timer)
     }, [gameState])
 
