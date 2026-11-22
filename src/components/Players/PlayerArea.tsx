@@ -1,6 +1,7 @@
 import type { Player, CardSource } from "../../helpers/types"
 import Deck from "../Deck/Deck"
 import Hand from "../Hand/Hand"
+import DiscardPile from "../Deck/DiscardPile"
 
 type PlayerAreaProps = {
     active: Player
@@ -28,16 +29,6 @@ const PlayerArea = ({active, me, isComputerTurn, instruction, winner, color, sel
         setSelected(isSelected(source) ? null : source)
     }
 
-    const handleDiscardClick = (index: number) => {
-        if (winner || isComputerTurn) return
-        if (selected?.from === "hand") {
-            onDiscard(selected.cardId, index)
-            setSelected(null)
-        } else if (active.discardPiles[index].length > 0) {
-            toggleSelect({from: "discard", pile: index})
-        }
-    }
-
     return (
         <div className="flex flex-row relative pt-3">
             <div className="absolute -left-60 top-10">
@@ -49,17 +40,19 @@ const PlayerArea = ({active, me, isComputerTurn, instruction, winner, color, sel
             <div>
                 <div className="flex flex-wrap items-start justify-center gap-6 pb-3">
                     {me.discardPiles.map((pile, i) => (
-                        <div key={i} className="flex flex-col items-center gap-1">
-                            <Deck
-                                name={`Discard ${i + 1}`}
-                                dropId={`discard-${i}`}
-                                draggable={!isComputerTurn && !winner}
-                                deck={pile}
-                                faceUp={true}
-                                selected={isSelected({from: "discard", pile: i})}
-                                highlight={!isComputerTurn && selected?.from === "hand"}
-                                onClick={() => handleDiscardClick(i)}
-                                color={color}
+                        <div key={i}>
+                            <DiscardPile 
+                                active={active}
+                                pile={pile}
+                                isComputerTurn
+                                winner={winner}
+                                pileNumber={i}
+                                selected={selected}
+                                isSelected={isSelected}
+                                color={color} 
+                                setSelected={setSelected}
+                                onDiscard={onDiscard}
+                                toggleSelect={toggleSelect}
                             />
                         </div>
                     ))}
