@@ -6,6 +6,7 @@ COPY package*.json ./
 RUN npm ci
 COPY . .
 RUN npm run build
+RUN apk upgrade --no-cache
 
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html

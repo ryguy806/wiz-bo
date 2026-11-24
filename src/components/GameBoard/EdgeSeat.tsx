@@ -1,6 +1,5 @@
 import type { Player } from "../../helpers/types"
 import Deck from "../Deck/Deck"
-import Hand from "../Hand/Hand"
 
 type Side = "top" | "left" | "right"
 
@@ -9,8 +8,6 @@ type Side = "top" | "left" | "right"
 const SEAT_SCALE = 0.6
 const SEAT_THICKNESS = "9rem"
 const SEAT_ROTATION: Record<Side, number> = {top: 0, left: 90, right: -90}
-
-const noop = () => {}
 
 type EdgeSeatProps = {
     player: Player
