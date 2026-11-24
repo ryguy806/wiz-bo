@@ -8,25 +8,25 @@ const CardFrontItem = ({id, value}: Card) => {
     const icon = getTextIcon(num)
 
     return (
-        <div id={id} className="border border-black bg-white w-24 h-32 flex items-center justify-center">
+        <div id={id} className="border-3 border-gray-600 bg-white w-24 h-32 flex items-center justify-center rounded">
             <div className={`isolate relative text-black size-full flex justify-center items-center`}>
-                {!(value === 'WIZ-BO') ? (
+                {!(value === 'WIZ-BO') ? ( 
                     <>
-                         <div className="absolute top-1 left-1.5 flex flex-col items-center font-bold leading-none">
-                            <span className="text-xs">{value}</span>
+                         <div className="absolute top-0.25 left-1.5 flex flex-col items-center font-bold leading-none">
+                            <span className="text-lg font-manufacturing">{value}</span>
                         </div>
-                        <div className="absolute bottom-1 right-1.5 flex rotate-180 flex-col items-center font-bold leading-none">
-                            <span className="text-xs">{value}</span>
+                        <div className="absolute bottom-0.25 right-1.5 flex rotate-180 flex-col items-center font-bold leading-none">
+                            <span className="text-lg font-manufacturing">{value}</span>
                         </div>
 
                                 <span
                                     role="img"
                                     aria-label="icon"
-                                    className="absolute place-self-center text-6xl"
+                                    className="absolute place-self-center text-8xl opacity-80"
                                 >
                                     {icon}
                                 </span>
-                                <span role="contentinfo" aria-label={value.toString()} className="absolute place-self-center text-5xl text-black">
+                                <span role="contentinfo" aria-label={value.toString()} className="absolute place-self-center text-7xl font-manufacturing text-black">
                                     {value}
                                 </span>
                     </>

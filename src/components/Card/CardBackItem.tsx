@@ -4,7 +4,7 @@ import wizardCardBack from "../../assets/images/wizard-card-back.jpg"
 const CardBackItem = ({id}: Card) => {
 
     return (
-            <img src={wizardCardBack} alt={`card back ${id}`} className="size-full"/>
+            <img src={wizardCardBack} alt={`card back ${id}`} className="size-full rounded"/>
     )
 }
 

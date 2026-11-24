@@ -61,7 +61,7 @@ export const getTextIcon = (number: number): string => {
         case 7:
         case 8:
         case 9:
-            return "🪄"
+            return "🕯️"
         case 10:
         case 11:
         case 12:

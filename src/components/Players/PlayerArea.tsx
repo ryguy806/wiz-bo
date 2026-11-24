@@ -31,7 +31,7 @@ const PlayerArea = ({active, me, isComputerTurn, instruction, winner, color, sel
 
     return (
         <div className="flex flex-row relative pt-3">
-            <div className="absolute -left-60 top-10">
+            <div className="absolute -left-55 top-1/5">
                 <p className="text-2xl font-semibold wrap-word w-50" style={{color: color}}>
                     {active.name}{isComputerTurn && "'s Turn (thinking...)"}
                 </p>
@@ -57,18 +57,18 @@ const PlayerArea = ({active, me, isComputerTurn, instruction, winner, color, sel
                         </div>
                     ))}
                 </div>
-                    <div className="flex flex-col items-center gap-1 scale-150 absolute -right-50 top-1/4">
-                        <Deck
-                            name="Stock"
-                            deck={me.stockPile}
-                            draggable={!isComputerTurn && !winner}
-                            faceUp={true}
-                            selected={isSelected({from: "stock"})}
-                            onClick={() => toggleSelect({from: "stock"})}
-                            color={color}
-                        />
-                        <p>Stock Pile</p>
-                    </div>
+                <div className="absolute -right-40 top-1/3 scale-150">
+                    <Deck
+                        name="Stock"
+                        deck={me.stockPile}
+                        draggable={!isComputerTurn && !winner}
+                        faceUp={true}
+                        selected={isSelected({from: "stock"})}
+                        onClick={() => toggleSelect({from: "stock"})}
+                        color={color}
+                    />
+                    <p>Stock Pile</p>
+                </div>
                 <Hand
                     faceUp={true}
                     cards={me.hand}
