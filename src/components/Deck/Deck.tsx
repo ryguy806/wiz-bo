@@ -27,7 +27,7 @@ const Deck = ({draggable = false, name, dropId, deck, faceUp, selected = false, 
      id={name} 
      ref={setNodeRef}
      style={{ "--player-color": color } as React.CSSProperties} 
-     className={`relative h-24 w-18 rounded transition-shadow ${isOver ? "ring-4 ring-[color:var(--player-color)]" : ""}`}
+     className={`relative w-24 h-32 rounded transition-shadow ${isOver ? "ring-4 ring-[color:var(--player-color)]" : ""}`}
     >
         {
             !topCard ? (

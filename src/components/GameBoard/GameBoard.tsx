@@ -127,21 +127,18 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
 
             {/* Top edge */}
             <div className="flex justify-center">
+                {seats.left ? <EdgeSeat player={seats.left} side="top" isTurn={seats.left.id === active.id} color={color} /> : <div />}
                 {seats.top && <EdgeSeat player={seats.top} side="top" isTurn={seats.top.id === active.id} color={color} />}
+                {seats.right ? <EdgeSeat player={seats.right} side="top" isTurn={seats.right.id === active.id} color={color} /> : <div />}
             </div>
 
-            {/* Left edge | table | right edge */}
-            <div className="grid min-h-0 grid-cols-[auto_minmax(0,1fr)_auto] grid-rows-1 gap-2">
-                {seats.left
-                    ? <EdgeSeat player={seats.left} side="left" isTurn={seats.left.id === active.id} color={color} />
-                    : <div />}
-
+            <div className="flex justify-center items-center gap-4">
                 <section className="flex flex-wrap content-center items-start justify-center gap-5">
                     <div className="flex flex-col items-center gap-1 pr-10">
                         <Deck name="Draw Pile" deck={drawPile} faceUp={false} />
                         <span className="text-xs text-white/70">Draw Pile</span>
                     </div>
-                    <div className="flex flex-wrap items-start justify-center gap-6">
+                    <div className="flex flex-wrap items-start justify-center gap-12">
                         {buildingPiles.map((pile, i) => (
                             <BuildingPiles
                                 key={i}
@@ -156,9 +153,7 @@ const GameBoard = ({gameState, onPlayCard, onDiscard, onNewGame}: GameBoardProps
                     </div>
                 </section>
 
-                {seats.right
-                    ? <EdgeSeat player={seats.right} side="right" isTurn={seats.right.id === active.id} color={color} />
-                    : <div />}
+                
             </div>
 
             <section className={`flex flex-col items-center gap-1 rounded-lg bg-black/30 p-1 ${!isComputerTurn ? "ring-4 ring-[color:var(--player-color)]" : ""}`} style={{"--player-color": color} as React.CSSProperties}>

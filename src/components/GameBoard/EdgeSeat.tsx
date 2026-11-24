@@ -53,13 +53,6 @@ const EdgeSeat = ({player, side, isTurn, color}: EdgeSeatProps) => {
                         <Deck key={i} name={`Discard ${i + 1}`} deck={pile} faceUp={true} draggable={false} />
                     ))}  
                 </div>
-                <Hand
-                    faceUp={false}
-                    cards={player.hand}
-                    selectedId={null}
-                    onSelect={noop}
-                    dragDisabled
-                />
             </div>
         </div>
     )

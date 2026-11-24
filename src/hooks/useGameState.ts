@@ -32,7 +32,7 @@ export const useGameState = () => {
 
     useEffect(() => {
         if (!isDrawing(gameState)) return
-        const timer = setTimeout(() => setGameState(drawSingleCard), 300) // ms between cards
+        const timer = setTimeout(() => setGameState(drawSingleCard), gameState.players[gameState.currentPlayer].isComputer ? 0 : 300) // ms between cards
         return () => clearTimeout(timer)
     }, [gameState])
 

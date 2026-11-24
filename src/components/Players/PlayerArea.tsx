@@ -38,7 +38,7 @@ const PlayerArea = ({active, me, isComputerTurn, instruction, winner, color, sel
                 {!isComputerTurn && <p className="text-sm w-50 wrap-word">{instruction}</p>}
             </div>
             <div>
-                <div className="flex flex-wrap items-start justify-center gap-6 pb-3">
+                <div className="flex flex-wrap items-start justify-center gap-8 pb-3">
                     {me.discardPiles.map((pile, i) => (
                         <div key={i}>
                             <DiscardPile 
@@ -57,7 +57,7 @@ const PlayerArea = ({active, me, isComputerTurn, instruction, winner, color, sel
                         </div>
                     ))}
                 </div>
-                    <div className="flex flex-col items-center gap-1 scale-150 absolute -right-60 top-1/4">
+                    <div className="flex flex-col items-center gap-1 scale-150 absolute -right-50 top-1/4">
                         <Deck
                             name="Stock"
                             deck={me.stockPile}
