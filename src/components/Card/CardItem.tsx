@@ -25,7 +25,7 @@ const CardItem = ({card, faceUp, selected = false, onClick, playerColor="#000"}:
                     onClick()
                 }
             } : undefined}
-            className={`group h-24 w-18 rounded transition-transform
+            className={`group w-24 h-32 rounded transition-transform
                 ${interactive ? "cursor-pointer hover:-translate-y-1" : ""}
                 ${selected ? `-translate-y-3 ring-4 ring-[${playerColor}]` : ""}`}
         >

@@ -8,7 +8,7 @@ const CardFrontItem = ({id, value}: Card) => {
     const icon = getTextIcon(num)
 
     return (
-        <div id={id} className="border border-black bg-white h-24 w-18 flex items-center justify-center">
+        <div id={id} className="border border-black bg-white w-24 h-32 flex items-center justify-center">
             <div className={`isolate relative text-black size-full flex justify-center items-center`}>
                 {!(value === 'WIZ-BO') ? (
                     <>
@@ -22,11 +22,11 @@ const CardFrontItem = ({id, value}: Card) => {
                                 <span
                                     role="img"
                                     aria-label="icon"
-                                    className="absolute top-5 text-5xl"
+                                    className="absolute place-self-center text-6xl"
                                 >
                                     {icon}
                                 </span>
-                                <span role="contentinfo" aria-label={value.toString()} className="absolute top-6 text-4xl text--500">
+                                <span role="contentinfo" aria-label={value.toString()} className="absolute place-self-center text-5xl text-black">
                                     {value}
                                 </span>
                     </>
